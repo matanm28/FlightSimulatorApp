@@ -13,24 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FlightSimulatorApp
+namespace FlightSimulatorApp.Controls
 {
-    using System.Runtime.CompilerServices;
-
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ControlsDisplay.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ControlsDisplay : UserControl
     {
-        public MainWindow()
+        public ControlsDisplay()
         {
             InitializeComponent();
-        }
-
-
-        private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            this.Joystick.lostFocus();
         }
     }
 }
