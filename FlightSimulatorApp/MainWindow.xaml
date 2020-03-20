@@ -25,8 +25,8 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <external:ControlsDisplay Grid.Column="2" Grid.Row="1" Grid.RowSpan="4"></external:ControlsDisplay>
-        <Slider Name="Throttle" Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="20" MinHeight="300" IsMoveToPointEnabled="True"></Slider>
-        <Slider Name="Rudder" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="3" Margin="30 20 0 0" HorizontalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="350" MinHeight="20" IsMoveToPointEnabled="True"></Slider>
+        <Slider x:Name="throttle" Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="20" MinHeight="300" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick" ></Slider>
+        <Slider x:Name="rudder" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="3" Margin="30 20 0 0" HorizontalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="350" MinHeight="20" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
         <external:Joystick x:Name="Joystick"  Grid.Column="4" Grid.Row="1" Grid.RowSpan ="2"></external:Joystick>
     </Grid>
 </Window>

@@ -83,6 +83,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ITelnetClient.cs" />
+    <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\TelnetClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

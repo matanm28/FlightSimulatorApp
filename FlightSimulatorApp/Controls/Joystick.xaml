@@ -46,9 +46,9 @@
                     </TransformGroup>
                 </Path.RenderTransform>
             </Path>
-            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125" MouseUp="JoyStick_MouseUp" MouseDown="KnobBase_MouseDown">
+            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Height="90" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125" MouseUp="JoyStick_MouseUp" MouseDown="KnobBase_MouseDown">
                 <!--<Ellipse x:Name="Shadow" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="86" Fill="#52131212" Canvas.Left="22" Canvas.Top="18" />-->
-                <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1" MouseDown="KnobBase_MouseDown">
+                <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1" >
                     <Ellipse.Fill>
                         <RadialGradientBrush>
                             <GradientStop Color="#FF8A8A8A" />
@@ -121,7 +121,8 @@
                                 <SineEase EasingMode="EaseInOut" />
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
-                        <DoubleAnimation Storyboard.TargetName="knobPosition" Storyboard.TargetProperty="Y" To="0" Duration="0:0:0.2">
+                        <DoubleAnimation Storyboard.TargetName="knobPosition" 
+                                         Storyboard.TargetProperty="Y" To="0" Duration="0:0:0.2">
                             <DoubleAnimation.EasingFunction>
                                 <SineEase EasingMode="EaseInOut" />
                             </DoubleAnimation.EasingFunction>

@@ -64,7 +64,7 @@ namespace FlightSimulatorApp.Controls
             y.From = y.To;
         }
 
-        private void Knob_MouseDown(object sender, MouseButtonEventArgs e)
+        private void KnobBase_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.mousePressed = true;
         }
@@ -93,10 +93,7 @@ namespace FlightSimulatorApp.Controls
             return bound > 1;
         }
 
-        private void KnobBase_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.mousePressed = true;
-        }
+
 
         private void moveKnobToCenter()
         {
@@ -108,7 +105,10 @@ namespace FlightSimulatorApp.Controls
 
         private void borderEllipse_MouseLeave(object sender, MouseEventArgs e)
         {
-            this.moveKnobToCenter();
+            if (this.mousePressed)
+            {
+                this.moveKnobToCenter();
+            }
         }
 
         public void lostFocus()

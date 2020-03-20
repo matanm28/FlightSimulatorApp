@@ -32,5 +32,11 @@ namespace FlightSimulatorApp
         {
             this.Joystick.lostFocus();
         }
+
+        private void Throttle_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Slider slider = sender as Slider;
+            slider.Value = 0;
+        }
     }
 }
