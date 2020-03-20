@@ -10,13 +10,15 @@ namespace FlightSimulatorApp.Model
 
     interface ITelnetClient
     {
-        void connect(string ip, int port);
+        void Connect(string ip, int port);
 
-        void disconnect();
+        bool IsConnected();
 
-        void send(string data);
+        void Disconnect();
 
-        string read(int numOfBytes);
-        string read();
+        void Send(string data);
+
+        string Read(int numOfBytes);
+        string Read();
     }
 }
