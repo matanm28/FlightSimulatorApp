@@ -25,6 +25,7 @@ namespace FlightSimulatorApp
         public MainWindow()
         {
             InitializeComponent();
+            Class1.test();
         }
 
 

@@ -53,6 +53,10 @@ namespace FlightSimulatorApp.Model
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = Encoding.ASCII.GetBytes(data);
             ns.Write(dataBytes, 0, dataBytes.Length);
+            long me = ns.Length;
+            bool flag = ns.DataAvailable;
+            ns.Read(dataBytes, 0, dataBytes.Length);
+            this.buffer += Encoding.ASCII.GetString(dataBytes);
         }
 
         public string read(int numOfBytes)
@@ -86,7 +90,7 @@ namespace FlightSimulatorApp.Model
             string dataToSend = String.Empty;
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = new byte[SIZE];
-            while (ns.Length > 0)
+            while (ns.DataAvailable)
             {
                 ns.Read(dataBytes, 0, SIZE);
                 this.buffer += Encoding.ASCII.GetString(dataBytes);
