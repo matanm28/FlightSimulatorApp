@@ -21,6 +21,7 @@ namespace FlightSimulatorApp.Model
         double Heading { get; set; }
 
         double VerticalSpeed { get; set; }
+
         double AirSpeed { get; set; }
 
         double GroundSpeed { get; set; }

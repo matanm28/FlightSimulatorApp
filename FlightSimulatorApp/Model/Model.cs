@@ -4,21 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightSimulatorApp.Model
-{
+namespace FlightSimulatorApp.Model {
     using System.Collections;
     using System.ComponentModel;
     using System.Threading;
     using System.Windows;
 
-    class Model : IModel
-    {
-        private enum FlightGear
-        {
-            Heading, VerticalSpeed, GroundSpeed,
-            AirSpeed, GpsAltitude, InternalRoll,
-            InternalPitch, AltimeterAltitude
+    internal class Model : IModel {
+        private enum FlightGear {
+            Heading,
+            VerticalSpeed,
+            GroundSpeed,
+            AirSpeed,
+            GpsAltitude,
+            InternalRoll,
+            InternalPitch,
+            AltimeterAltitude
         }
+
         private ITelnetClient client;
 
         private IList<string> paramPathList;
@@ -37,50 +40,44 @@ namespace FlightSimulatorApp.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Model()
-        {
+        public Model() {
             this.client = new TelnetClient();
+
             this.stop = false;
             this.intializeParamPathList();
             this.intializePropList();
         }
 
-        public void Connect(string ip, int port)
-        {
+        public void Connect(string ip, int port) {
             this.client.Connect(ip, port);
         }
 
-        public void Disconnect()
-        {
+        public void Disconnect() {
             this.stop = false;
             this.client.Disconnect();
         }
 
-        public void Start()
-        {
+        public void Start() {
             new Thread(
-                delegate ()
-                    {
-                        if (!this.client.IsConnected())
-                        {
-                            MessageBox.Show("No connection to host", "Error");
-                        }
-                        while (!this.stop)
-                        {
-                            this.client.Send("get " + this.paramPathList[(int)FlightGear.Heading]);
-                            this.Heading = double.Parse(this.client.Read());
+                delegate () {
+                    if (!this.client.IsConnected()) {
+                        MessageBox.Show("No connection to host", "Error");
+                    }
 
+                    while (!this.stop) {
+                        this.client.Send("get " + this.paramPathList[(int)FlightGear.Heading] + " \r\n");
+                        this.Heading = double.Parse(this.client.Read());
 
-
-                            Thread.Sleep(250);
-                        }
-                    }).Start();
+                        Thread.Sleep(250);
+                    }
+                }).Start();
         }
 
-        private void intializeParamPathList()
-        {
+        private void intializeParamPathList() {
             this.paramPathList = new List<string>();
-            this.paramPathList.Insert((int)FlightGear.Heading, string.Empty);
+            this.paramPathList.Insert(
+                (int)FlightGear.Heading,
+                "/instrumentation/heading-indicator/indicated-heading-deg");
             this.paramPathList.Insert((int)FlightGear.VerticalSpeed, string.Empty);
             this.paramPathList.Insert((int)FlightGear.GroundSpeed, string.Empty);
             this.paramPathList.Insert((int)FlightGear.AirSpeed, string.Empty);
@@ -89,8 +86,8 @@ namespace FlightSimulatorApp.Model
             this.paramPathList.Insert((int)FlightGear.InternalPitch, string.Empty);
             this.paramPathList.Insert((int)FlightGear.AltimeterAltitude, string.Empty);
         }
-        private void intializePropList()
-        {
+
+        private void intializePropList() {
             this.propList = new List<string>();
             this.paramPathList.Insert((int)FlightGear.Heading, "Heading");
             this.paramPathList.Insert((int)FlightGear.VerticalSpeed, "VerticalSpeed");
@@ -102,125 +99,75 @@ namespace FlightSimulatorApp.Model
             this.paramPathList.Insert((int)FlightGear.AltimeterAltitude, "AltimeterAltitude");
         }
 
-        public void NotifyPropertyChanged(string propName)
-        {
-            if (this.PropertyChanged != null)
-            {
+        public void NotifyPropertyChanged(string propName) {
+            if (this.PropertyChanged != null) {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
 
-        public double Heading
-        {
-            get
-            {
-                return this.heading;
-            }
+        public double Heading {
+            get => this.heading;
 
-            set
-            {
+            set {
                 this.heading = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.Heading]);
-
             }
         }
 
-        public double VerticalSpeed
-        {
-            get
-            {
-                return this.verticalSpeed;
-            }
+        public double VerticalSpeed {
+            get => this.verticalSpeed;
 
-            set
-            {
+            set {
                 this.verticalSpeed = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.VerticalSpeed]);
-
             }
         }
-        public double AirSpeed
-        {
-            get
-            {
-                return this.airSpeed;
-            }
+        public double AirSpeed {
+            get => this.airSpeed;
 
-            set
-            {
+            set {
                 this.airSpeed = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.AirSpeed]);
-
             }
         }
-        public double GroundSpeed
-        {
-            get
-            {
-                return this.groundSpeed;
-            }
+        public double GroundSpeed {
+            get => this.groundSpeed;
 
-            set
-            {
+            set {
                 this.groundSpeed = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.GroundSpeed]);
-
             }
         }
-        public double GpsAltitude
-        {
-            get
-            {
-                return this.gpsAltitude;
-            }
+        public double GpsAltitude {
+            get => this.gpsAltitude;
 
-            set
-            {
+            set {
                 this.gpsAltitude = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.GpsAltitude]);
-
             }
         }
-        public double InternalRoll
-        {
-            get
-            {
-                return this.internalRoll;
-            }
+        public double InternalRoll {
+            get => this.internalRoll;
 
-            set
-            {
+            set {
                 this.internalRoll = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.InternalRoll]);
-
             }
         }
-        public double InternalPitch
-        {
-            get
-            {
-                return this.internalPitch;
-            }
+        public double InternalPitch {
+            get => this.internalPitch;
 
-            set
-            {
+            set {
                 this.internalPitch = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.InternalPitch]);
-
             }
         }
-        public double AltimeterAltitude
-        {
-            get
-            {
-                return this.altimeterAltitude;
-            }
+        public double AltimeterAltitude {
+            get => this.altimeterAltitude;
 
-            set
-            {
+            set {
                 this.altimeterAltitude = value;
                 this.NotifyPropertyChanged(this.propList[(int)FlightGear.AltimeterAltitude]);
-
             }
         }
     }

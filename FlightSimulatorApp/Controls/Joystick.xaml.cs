@@ -74,6 +74,11 @@ namespace FlightSimulatorApp.Controls {
             }
         }
 
+        private void Throttle_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            Slider slider = sender as Slider;
+            slider.Value = 0;
+        }
+
         private bool knobOutOfBound() {
             double bound = Math.Pow(this.toX - this.knobCenter.X, 2) / Math.Pow(this.borderEllipse.Width / 2, 2) +
                            Math.Pow(this.toY - this.knobCenter.Y, 2) / Math.Pow(this.borderEllipse.Height / 2, 2);
