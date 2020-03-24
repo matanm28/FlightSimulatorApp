@@ -84,6 +84,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ITelnetClient.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="Model\TelnetClient.cs" />

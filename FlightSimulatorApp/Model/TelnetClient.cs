@@ -12,17 +12,26 @@ namespace FlightSimulatorApp.Model
     using System.Net.Sockets;
     using System.Windows;
 
+    /// <summary>an implementation for a ITelnetClient.</summary>
+    /// <seealso cref="FlightSimulatorApp.Model.ITelnetClient" />
     public class TelnetClient : ITelnetClient
     {
-        public const short SIZE = 512;
+        /// <summary>The size</summary>
+        private const short Size = 512;
+
+        /// <summary>The client</summary>
         private TcpClient client;
 
+        /// <summary>The buffer</summary>
         private string buffer;
 
-        public void connect(string ip, int port)
+        /// <summary>Connects the specified IP.</summary>
+        /// <param name="ip">The IP.</param>
+        /// <param name="port">The port.</param>
+        public void Connect(string ip, int port)
         {
             this.client = new TcpClient(AddressFamily.InterNetwork);
-            this.buffer = String.Empty;
+            this.buffer = string.Empty;
             do
             {
                 try
@@ -43,27 +52,29 @@ namespace FlightSimulatorApp.Model
             while (!this.client.Connected);
         }
 
-        public void disconnect()
+        /// <summary>Disconnects this instance.</summary>
+        public void Disconnect()
         {
             this.client.Close();
         }
 
-        public void send(string data)
+        /// <summary>Sends the specified data.</summary>
+        /// <param name="data">The data.</param>
+        public void Send(string data)
         {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = Encoding.ASCII.GetBytes(data);
             ns.Write(dataBytes, 0, dataBytes.Length);
-            long me = ns.Length;
-            bool flag = ns.DataAvailable;
-            ns.Read(dataBytes, 0, dataBytes.Length);
-            this.buffer += Encoding.ASCII.GetString(dataBytes);
         }
 
-        public string read(int numOfBytes)
+        /// <summary>Reads the specified number of bytes.</summary>
+        /// <param name="numOfBytes">The number of bytes to read from buffer.</param>
+        /// <returns> a data string of length <param name="numOfBytes"></param> from the buffer</returns>
+        public string Read(int numOfBytes)
         {
             NetworkStream ns = this.client.GetStream();
-            byte[] dataBytes = new byte[SIZE];
-            string dataToSend = String.Empty;
+            byte[] dataBytes = new byte[Size];
+            string dataToSend = string.Empty;
             ////buffer contains all data
             if (this.buffer.Length >= numOfBytes)
             {
@@ -75,7 +86,7 @@ namespace FlightSimulatorApp.Model
                 ////reads from network stream
                 do
                 {
-                    ns.Read(dataBytes, 0, SIZE);
+                    ns.Read(dataBytes, 0, Size);
                     this.buffer += Encoding.ASCII.GetString(dataBytes);
                 }
                 while (this.buffer.Length < numOfBytes);
@@ -85,19 +96,25 @@ namespace FlightSimulatorApp.Model
             return dataToSend;
         }
 
-        public string read()
+        /// <summary>Reads this instance.</summary>
+        /// <returns>the entire buffer as string</returns>
+        public string Read()
         {
-            string dataToSend = String.Empty;
             NetworkStream ns = this.client.GetStream();
-            byte[] dataBytes = new byte[SIZE];
-            while (ns.DataAvailable)
+            byte[] dataBytes = new byte[Size];
+            while (ns.Length > 0)
             {
-                ns.Read(dataBytes, 0, SIZE);
+                ns.Read(dataBytes, 0, Size);
                 this.buffer += Encoding.ASCII.GetString(dataBytes);
             }
-            dataToSend = this.buffer.Substring(0, this.buffer.Length);
-            this.buffer = String.Empty;
+            string dataToSend = this.buffer.Substring(0, this.buffer.Length);
+            this.buffer = string.Empty;
             return dataToSend;
+        }
+
+        public bool IsConnected()
+        {
+            return this.client.Connected;
         }
     }
 }

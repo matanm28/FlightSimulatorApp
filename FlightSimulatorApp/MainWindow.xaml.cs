@@ -29,6 +29,9 @@ namespace FlightSimulatorApp
         }
 
 
+        /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyboardFocusChangedEventArgs"/> instance containing the event data.</param>
         private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             this.Joystick.lostFocus();
