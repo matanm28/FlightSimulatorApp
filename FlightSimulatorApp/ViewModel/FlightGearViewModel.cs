@@ -13,10 +13,10 @@ namespace FlightSimulatorApp.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Properties
-        double VM_Heading {
+        public double VM_Heading {
             get { return this.model.Heading; }
         }
-        double VM_VerticalSpeed {
+        public double VM_VerticalSpeed {
             get { return this.model.VerticalSpeed; }
         }
         double VM_AirSpeed {
@@ -42,7 +42,7 @@ namespace FlightSimulatorApp.ViewModel {
         /// <param name="model"></param>
         public FlightGearViewModel(IModel model) {
             this.model = model;
-            PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
+            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
             };
         }
