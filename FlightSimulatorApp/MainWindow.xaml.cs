@@ -31,7 +31,6 @@ namespace FlightSimulatorApp {
             this.Joystick.DataContext = this.vm;
             this.ControlsDisplay.DataContext = this.vm;
             this.vm.Start("127.0.0.1", 5402);
-
         }
 
         /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
