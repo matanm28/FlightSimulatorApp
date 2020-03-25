@@ -35,35 +35,35 @@
                         <RowDefinition Height="10" />
                     </Grid.RowDefinitions>
                     <TextBlock FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="10 10">indicated-heading</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="1" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_Heading}" FontWeight="Bold" Grid.Row="1" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="1" Grid.Column="3" Margin="10">deg</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="2" Grid.Column="1" Margin="10 10">vertical-speed</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="2" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_VerticalSpeed}" FontWeight="Bold" Grid.Row="2" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="2" Grid.Column="3" Margin="10">km\h</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="10 10">ground-speed</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="3" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_GroundSpeed}" FontWeight="Bold" Grid.Row="3" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="3" Grid.Column="3" Margin="10">km\h</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="4" Grid.Column="1" Margin="10 10">airspeed</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="4" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_GroundSpeed}" FontWeight="Bold" Grid.Row="4" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="4" Grid.Column="3" Margin="10">kt</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="5" Grid.Column="1" Margin="10 10">altitude</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="5" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_GpsAltitude}" FontWeight="Bold" Grid.Row="5" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="5" Grid.Column="3" Margin="10">ft</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="6" Grid.Column="1" Margin="10 10">roll</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="6" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_InternalRoll}" FontWeight="Bold" Grid.Row="6" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="6" Grid.Column="3" Margin="10">deg</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="7" Grid.Column="1" Margin="10 10">pitch</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="7" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_InternalPitch}" FontWeight="Bold" Grid.Row="7" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="7" Grid.Column="3" Margin="10">deg</TextBlock>
 
                     <TextBlock FontWeight="Bold" Grid.Row="8" Grid.Column="1" Margin="10 10">altimeter</TextBlock>
-                    <TextBox FontWeight="Bold" Grid.Row="8" Grid.Column="2" Margin="0 10" MinWidth="60" />
+                    <TextBox Text="{Binding VM_AltimeterAltitude}" FontWeight="Bold" Grid.Row="8" Grid.Column="2" Margin="0 10" MinWidth="60" />
                     <TextBlock FontWeight="Bold" Grid.Row="8" Grid.Column="3" Margin="10">ft</TextBlock>
                 </Grid>
 

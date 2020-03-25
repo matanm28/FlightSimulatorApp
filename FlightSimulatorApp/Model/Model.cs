@@ -42,7 +42,6 @@ namespace FlightSimulatorApp.Model {
 
         public Model() {
             this.client = new TelnetClient();
-
             this.stop = false;
             this.intializeParamPathList();
             this.intializePropList();
