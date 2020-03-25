@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.TextFormatting;
 
 namespace FlightSimulatorApp.Model {
     using System.Collections;
@@ -94,15 +95,21 @@ namespace FlightSimulatorApp.Model {
             int index = this.buffer.IndexOf('>');
             if (index != -1) {
                 dataToSend = this.buffer.Substring(0, index);
-                dataToSend = dataToSend.Substring(
-                    dataToSend.IndexOf('\'') + 1,
-                    dataToSend.IndexOf('\'', dataToSend.IndexOf('\'') + 1) - dataToSend.IndexOf('\'') - 1);
+                dataToSend = this.getValue(dataToSend);
                 this.buffer = this.buffer.Remove(0, index + 2);
             }
             return dataToSend;
         }
         public bool IsConnected() {
             return this.client.Connected;
+        }
+
+        public string getValue(string input)
+        {
+            //  dataToSend = dataToSend.Substring(dataToSend.IndexOf('\'') + 1,dataToSend.IndexOf('\'', dataToSend.IndexOf('\'') + 1) - dataToSend.IndexOf('\'') - 1);
+            int startIndex = input.IndexOf('\'') + 1;
+            int lenght = input.IndexOf('\'', startIndex) - startIndex;
+            return input.Substring(startIndex, lenght);
         }
     }
 }

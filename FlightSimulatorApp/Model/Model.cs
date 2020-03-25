@@ -29,8 +29,6 @@ namespace FlightSimulatorApp.Model
 
         private IList<string> paramPathList;
 
-        private IList<string> propList;
-
         private volatile bool stop;
         private double heading;
         private double verticalSpeed;
@@ -48,7 +46,6 @@ namespace FlightSimulatorApp.Model
             this.client = new TelnetClient();
             this.stop = false;
             this.intializeParamPathList();
-            this.intializePropList();
         }
 
         public void Connect(string ip, int port)
@@ -95,18 +92,7 @@ namespace FlightSimulatorApp.Model
             this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, "/instrumentation/altimeter/indicated-altitude-ft");
         }
 
-        private void intializePropList()
-        {
-            this.propList = new List<string>();
-            this.propList.Insert((int) FG_Properties.Heading, "Heading");
-            this.propList.Insert((int) FG_Properties.VerticalSpeed, "VerticalSpeed");
-            this.propList.Insert((int) FG_Properties.GroundSpeed, "GroundSpeed");
-            this.propList.Insert((int) FG_Properties.AirSpeed, "AirSpeed");
-            this.propList.Insert((int) FG_Properties.GpsAltitude, "GpsAltitude");
-            this.propList.Insert((int) FG_Properties.InternalRoll, "InternalRoll");
-            this.propList.Insert((int) FG_Properties.InternalPitch, "InternalPitch");
-            this.propList.Insert((int) FG_Properties.AltimeterAltitude, "AltimeterAltitude");
-        }
+
 
         public void NotifyPropertyChanged(string propName)
         {
@@ -114,6 +100,23 @@ namespace FlightSimulatorApp.Model
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
+        }
+        //todo: check if FG returns after set
+        public void moveThrottle(double value)
+        {
+            this.client.Send("set /controls/engines/current-engine/throttle " + value.ToString() + " \r\n");
+        }
+
+        public void moveRudder(double value) {
+            this.client.Send("set /controls/flight/rudder " + value.ToString() + " \r\n");
+        }
+
+        public void moveElevator(double value) {
+            this.client.Send("set /controls/flight/elevator " + value.ToString() + " \r\n");
+        }
+
+        public void moveAileron(double value) {
+            this.client.Send("set /controls/flight/aileron " + value.ToString() + " \r\n");
         }
 
         public double Heading
@@ -123,7 +126,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.heading = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.Heading]);
+                this.NotifyPropertyChanged("Heading");
             }
         }
 
@@ -134,7 +137,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.verticalSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.VerticalSpeed]);
+                this.NotifyPropertyChanged("VerticalSpeed");
             }
         }
 
@@ -145,7 +148,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.airSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.AirSpeed]);
+                this.NotifyPropertyChanged("AirSpeed");
             }
         }
 
@@ -156,7 +159,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.groundSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.GroundSpeed]);
+                this.NotifyPropertyChanged("GroundSpeed");
             }
         }
 
@@ -167,7 +170,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.gpsAltitude = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.GpsAltitude]);
+                this.NotifyPropertyChanged("GpsAltitude");
             }
         }
 
@@ -178,7 +181,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.internalRoll = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.InternalRoll]);
+                this.NotifyPropertyChanged("InternalRoll");
             }
         }
 
@@ -189,7 +192,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.internalPitch = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.InternalPitch]);
+                this.NotifyPropertyChanged("InternalPitch");
             }
         }
 
@@ -200,7 +203,7 @@ namespace FlightSimulatorApp.Model
             set
             {
                 this.altimeterAltitude = value;
-                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.AltimeterAltitude]);
+                this.NotifyPropertyChanged("AltimeterAltitude");
             }
         }
     }
