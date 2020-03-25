@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model
@@ -117,6 +118,12 @@ namespace FlightSimulatorApp.Model
             }
             return dataToSend;
         }
+
+        public string getValue(string input)
+        {
+            //string[] test = Regex.Match(input, "'*'").Groups[0];
+        }
+
         public bool IsConnected()
         {
             return this.client.Connected;

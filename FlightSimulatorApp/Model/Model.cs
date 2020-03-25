@@ -87,25 +87,25 @@ namespace FlightSimulatorApp.Model
             this.paramPathList = new List<string>();
             this.paramPathList.Insert((int) FG_Properties.Heading, "/instrumentation/heading-indicator/indicated-heading-deg");
             this.paramPathList.Insert( (int)FG_Properties.VerticalSpeed, "/instrumentation/gps/indicated-vertical-speed");
-            this.paramPathList.Insert((int) FG_Properties.GroundSpeed, "");
-            this.paramPathList.Insert((int) FG_Properties.AirSpeed, string.Empty);
-            this.paramPathList.Insert((int) FG_Properties.GpsAltitude, string.Empty);
-            this.paramPathList.Insert((int) FG_Properties.InternalRoll, string.Empty);
-            this.paramPathList.Insert((int) FG_Properties.InternalPitch, string.Empty);
-            this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.GroundSpeed, "/instrumentation/gps/indicated-ground-speed-kt");
+            this.paramPathList.Insert((int) FG_Properties.AirSpeed, "/instrumentation/airspeed-indicator/indicated-speed-kt");
+            this.paramPathList.Insert((int) FG_Properties.GpsAltitude, "/instrumentation/gps/indicated-altitude-ft");
+            this.paramPathList.Insert((int) FG_Properties.InternalRoll, "/instrumentation/attitude-indicator/internal-roll-deg");
+            this.paramPathList.Insert((int) FG_Properties.InternalPitch, "/instrumentation/attitude-indicator/internal-pitch-deg");
+            this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, "/instrumentation/altimeter/indicated-altitude-ft");
         }
 
         private void intializePropList()
         {
             this.propList = new List<string>();
-            this.paramPathList.Insert((int) FG_Properties.Heading, "Heading");
-            this.paramPathList.Insert((int) FG_Properties.VerticalSpeed, "VerticalSpeed");
-            this.paramPathList.Insert((int) FG_Properties.GroundSpeed, "GroundSpeed");
-            this.paramPathList.Insert((int) FG_Properties.AirSpeed, "AirSpeed");
-            this.paramPathList.Insert((int) FG_Properties.GpsAltitude, "GpsAltitude");
-            this.paramPathList.Insert((int) FG_Properties.InternalRoll, "InternalRoll");
-            this.paramPathList.Insert((int) FG_Properties.InternalPitch, "InternalPitch");
-            this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, "AltimeterAltitude");
+            this.propList.Insert((int) FG_Properties.Heading, "Heading");
+            this.propList.Insert((int) FG_Properties.VerticalSpeed, "VerticalSpeed");
+            this.propList.Insert((int) FG_Properties.GroundSpeed, "GroundSpeed");
+            this.propList.Insert((int) FG_Properties.AirSpeed, "AirSpeed");
+            this.propList.Insert((int) FG_Properties.GpsAltitude, "GpsAltitude");
+            this.propList.Insert((int) FG_Properties.InternalRoll, "InternalRoll");
+            this.propList.Insert((int) FG_Properties.InternalPitch, "InternalPitch");
+            this.propList.Insert((int) FG_Properties.AltimeterAltitude, "AltimeterAltitude");
         }
 
         public void NotifyPropertyChanged(string propName)
