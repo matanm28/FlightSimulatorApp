@@ -14,17 +14,25 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace FlightSimulatorApp {
+    using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using FlightSimulatorApp.Model;
+    using FlightSimulatorApp.ViewModel;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private FlightGearViewModel vm;
         public MainWindow() {
             InitializeComponent();
-        }
+            this.vm = new FlightGearViewModel(new Model.Model());
+            this.DataContext = this.vm;
+            this.Joystick.DataContext = this.vm;
+            this.ControlsDisplay.DataContext = this.vm;
+            this.vm.Start("127.0.0.1", 5402);
 
+        }
 
         /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
         /// <param name="sender">The source of the event.</param>
