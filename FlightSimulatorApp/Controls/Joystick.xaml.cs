@@ -18,6 +18,7 @@ namespace FlightSimulatorApp.Controls {
     using System.Runtime.CompilerServices;
     using System.Windows.Media.Animation;
 
+
     /// <summary>
     /// Interaction logic for Joystick.xaml
     /// </summary>
@@ -30,6 +31,9 @@ namespace FlightSimulatorApp.Controls {
 
         private Point knobCenter;
 
+        public delegate void CoordinatesChangedEvent(double x, double y);
+
+        public event CoordinatesChangedEvent CoordinatesChanged;
 
         public Joystick() {
             InitializeComponent();
@@ -53,9 +57,18 @@ namespace FlightSimulatorApp.Controls {
             DoubleAnimation y = sb.Children[1] as DoubleAnimation;
             x.To = this.toX - this.knobCenter.X;
             y.To = this.toY - this.knobCenter.Y;
+            this.joystickMoveValueTranslation();
             sb.Begin(this);
             x.From = x.To;
             y.From = y.To;
+        }
+
+        private void joystickMoveValueTranslation() {
+            double normalX = (this.toX - this.knobCenter.X) / this.borderEllipse.Width;
+            double normalY = (this.toY - this.knobCenter.Y) / this.borderEllipse.Height;
+            if (this.CoordinatesChanged != null) {
+                this.CoordinatesChanged(normalX, normalY);
+            }
         }
 
         private void KnobBase_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -85,8 +98,6 @@ namespace FlightSimulatorApp.Controls {
             return bound > 1;
         }
 
-
-
         private void moveKnobToCenter() {
             this.mousePressed = false;
             this.toX = this.knobCenter.X;
@@ -105,6 +116,5 @@ namespace FlightSimulatorApp.Controls {
                 this.moveKnobToCenter();
             }
         }
-
     }
 }

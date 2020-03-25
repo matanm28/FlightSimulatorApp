@@ -104,8 +104,7 @@ namespace FlightSimulatorApp.Model {
             return this.client.Connected;
         }
 
-        public string getValue(string input)
-        {
+        public string getValue(string input) {
             //  dataToSend = dataToSend.Substring(dataToSend.IndexOf('\'') + 1,dataToSend.IndexOf('\'', dataToSend.IndexOf('\'') + 1) - dataToSend.IndexOf('\'') - 1);
             int startIndex = input.IndexOf('\'') + 1;
             int lenght = input.IndexOf('\'', startIndex) - startIndex;

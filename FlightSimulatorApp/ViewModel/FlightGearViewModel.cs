@@ -8,7 +8,7 @@ namespace FlightSimulatorApp.ViewModel {
     using System.ComponentModel;
     using FlightSimulatorApp.Model;
 
-    class FlightGearViewModel : INotifyPropertyChanged {
+    public class FlightGearViewModel : INotifyPropertyChanged {
         private IModel model;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -19,23 +19,40 @@ namespace FlightSimulatorApp.ViewModel {
         public double VM_VerticalSpeed {
             get { return this.model.VerticalSpeed; }
         }
-        double VM_AirSpeed {
+        public double VM_AirSpeed {
             get { return this.model.AirSpeed; }
         }
-        double VM_GroundSpeed {
+        public double VM_GroundSpeed {
             get { return this.model.GroundSpeed; }
         }
-        double VM_GpsAltitude {
+        public double VM_GpsAltitude {
             get { return this.model.GpsAltitude; }
         }
-        double VM_InternalRoll {
+        public double VM_InternalRoll {
             get { return this.model.InternalRoll; }
         }
-        double VM_InternalPitch {
+        public double VM_InternalPitch {
             get { return this.model.InternalPitch; }
         }
-        double VM_AltimeterAltitude {
+        public double VM_AltimeterAltitude {
             get { return this.model.AltimeterAltitude; }
+        }
+        public double VM_Throttle {
+            get { return this.model.Throttle; }
+            set { this.model.Throttle = value; }
+        }
+        public double VM_Rudder {
+            get { return this.model.Rudder; }
+            set { this.model.Rudder = value; }
+        }
+
+        public double VM_Elevator {
+            get { return this.model.Elevator; }
+            set { this.model.Elevator = value; }
+        }
+        public double VM_Aileron {
+            get { return this.model.Aileron; }
+            set { this.model.Aileron = value; }
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object"/> class.</summary>
@@ -45,6 +62,7 @@ namespace FlightSimulatorApp.ViewModel {
             model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
             };
+            this.VM_Throttle = 0;
         }
 
         /// <summary>Notifies the property changed.</summary>

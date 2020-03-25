@@ -151,7 +151,7 @@
                         UseLayoutRounding="False" VerticalAlignment="Top" Width="21.667" Canvas.Left="18.166"
                         Canvas.Top="15.917" />
                     <Canvas.RenderTransform>
-                        <TranslateTransform x:Name="knobPosition" />
+                        <TranslateTransform x:Name="knobPosition"/>
                     </Canvas.RenderTransform>
                     <Canvas.Resources>
                         <Storyboard x:Key="CenterKnob" x:Name="centerKnob">
@@ -189,8 +189,8 @@
                     </Canvas.Resources>
                 </Canvas>
             </Canvas>
-            <Slider x:Name="throttle" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="0 0 10 0" VerticalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="20" MinHeight="300" MaxHeight="350" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick" ></Slider>
-            <Slider x:Name="rudder" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Margin="30 10 0 0" HorizontalAlignment="Center" Value="0" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickPlacement="BottomRight" TickFrequency="0.1" MaxWidth="350" MinWidth="300" MinHeight="20" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
+            <Slider x:Name="throttle" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="0 0 10 0" VerticalAlignment="Center" Value="{Binding VM_Throttle, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay}" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="20" MinHeight="300" MaxHeight="350" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
+            <Slider x:Name="rudder" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Margin="30 10 0 0" HorizontalAlignment="Center" Value="{Binding VM_Rudder, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay}" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickPlacement="BottomRight" TickFrequency="0.1" MaxWidth="350" MinWidth="300" MinHeight="20" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
         </Grid>
     </Viewbox>
 </UserControl>
