@@ -23,7 +23,7 @@ namespace FlightSimulatorApp.Model
         private TcpClient client;
 
         /// <summary>The buffer</summary>
-        private string buffer;
+        private String buffer;
 
         /// <summary>Connects the specified IP.</summary>
         /// <param name="ip">The IP.</param>
@@ -31,6 +31,7 @@ namespace FlightSimulatorApp.Model
         public void Connect(string ip, int port)
         {
             this.client = new TcpClient(AddressFamily.InterNetwork);
+            
             this.buffer = string.Empty;
             do
             {
@@ -102,16 +103,20 @@ namespace FlightSimulatorApp.Model
         {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = new byte[Size];
-            while (ns.Length > 0)
+            string dataToSend = string.Empty;
+            while (!this.buffer.Contains("\r\n/>"))
             {
                 ns.Read(dataBytes, 0, Size);
                 this.buffer += Encoding.ASCII.GetString(dataBytes);
             }
-            string dataToSend = this.buffer.Substring(0, this.buffer.Length);
-            this.buffer = string.Empty;
+            int index = this.buffer.IndexOf('>');
+            if (index != -1)
+            {
+                dataToSend = this.buffer.Substring(0, index);
+                this.buffer = this.buffer.Remove(0,index);
+            }
             return dataToSend;
         }
-
         public bool IsConnected()
         {
             return this.client.Connected;

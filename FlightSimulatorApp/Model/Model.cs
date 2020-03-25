@@ -4,22 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightSimulatorApp.Model {
+namespace FlightSimulatorApp.Model
+{
     using System.Collections;
     using System.ComponentModel;
     using System.Threading;
     using System.Windows;
 
-    internal class Model : IModel {
-        private enum FlightGear {
-            Heading,
-            VerticalSpeed,
-            GroundSpeed,
-            AirSpeed,
-            GpsAltitude,
-            InternalRoll,
-            InternalPitch,
-            AltimeterAltitude
+    internal class Model : IModel
+    {
+        private enum FG_Properties
+        {
+            Heading = 0,
+            VerticalSpeed = 1,
+            GroundSpeed = 2,
+            AirSpeed = 3,
+            GpsAltitude = 4,
+            InternalRoll = 5,
+            InternalPitch = 6,
+            AltimeterAltitude = 7
         }
 
         private ITelnetClient client;
@@ -40,31 +43,38 @@ namespace FlightSimulatorApp.Model {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Model() {
+        public Model()
+        {
             this.client = new TelnetClient();
             this.stop = false;
             this.intializeParamPathList();
             this.intializePropList();
         }
 
-        public void Connect(string ip, int port) {
+        public void Connect(string ip, int port)
+        {
             this.client.Connect(ip, port);
         }
 
-        public void Disconnect() {
+        public void Disconnect()
+        {
             this.stop = false;
             this.client.Disconnect();
         }
 
-        public void Start() {
+        public void Start()
+        {
             new Thread(
-                delegate () {
-                    if (!this.client.IsConnected()) {
+                delegate()
+                {
+                    if (!this.client.IsConnected())
+                    {
                         MessageBox.Show("No connection to host", "Error");
                     }
 
-                    while (!this.stop) {
-                        this.client.Send("get " + this.paramPathList[(int)FlightGear.Heading] + " \r\n");
+                    while (!this.stop)
+                    {
+                        this.client.Send("get " + this.paramPathList[(int) FG_Properties.Heading] + " \r\n");
                         this.Heading = double.Parse(this.client.Read());
 
                         Thread.Sleep(250);
@@ -72,101 +82,125 @@ namespace FlightSimulatorApp.Model {
                 }).Start();
         }
 
-        private void intializeParamPathList() {
+        private void intializeParamPathList()
+        {
             this.paramPathList = new List<string>();
-            this.paramPathList.Insert(
-                (int)FlightGear.Heading,
-                "/instrumentation/heading-indicator/indicated-heading-deg");
-            this.paramPathList.Insert((int)FlightGear.VerticalSpeed, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.GroundSpeed, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.AirSpeed, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.GpsAltitude, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.InternalRoll, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.InternalPitch, string.Empty);
-            this.paramPathList.Insert((int)FlightGear.AltimeterAltitude, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.Heading, "/instrumentation/heading-indicator/indicated-heading-deg");
+            this.paramPathList.Insert( (int)FG_Properties.VerticalSpeed, "/instrumentation/gps/indicated-vertical-speed");
+            this.paramPathList.Insert((int) FG_Properties.GroundSpeed, "");
+            this.paramPathList.Insert((int) FG_Properties.AirSpeed, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.GpsAltitude, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.InternalRoll, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.InternalPitch, string.Empty);
+            this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, string.Empty);
         }
 
-        private void intializePropList() {
+        private void intializePropList()
+        {
             this.propList = new List<string>();
-            this.paramPathList.Insert((int)FlightGear.Heading, "Heading");
-            this.paramPathList.Insert((int)FlightGear.VerticalSpeed, "VerticalSpeed");
-            this.paramPathList.Insert((int)FlightGear.GroundSpeed, "GroundSpeed");
-            this.paramPathList.Insert((int)FlightGear.AirSpeed, "AirSpeed");
-            this.paramPathList.Insert((int)FlightGear.GpsAltitude, "GpsAltitude");
-            this.paramPathList.Insert((int)FlightGear.InternalRoll, "InternalRoll");
-            this.paramPathList.Insert((int)FlightGear.InternalPitch, "InternalPitch");
-            this.paramPathList.Insert((int)FlightGear.AltimeterAltitude, "AltimeterAltitude");
+            this.paramPathList.Insert((int) FG_Properties.Heading, "Heading");
+            this.paramPathList.Insert((int) FG_Properties.VerticalSpeed, "VerticalSpeed");
+            this.paramPathList.Insert((int) FG_Properties.GroundSpeed, "GroundSpeed");
+            this.paramPathList.Insert((int) FG_Properties.AirSpeed, "AirSpeed");
+            this.paramPathList.Insert((int) FG_Properties.GpsAltitude, "GpsAltitude");
+            this.paramPathList.Insert((int) FG_Properties.InternalRoll, "InternalRoll");
+            this.paramPathList.Insert((int) FG_Properties.InternalPitch, "InternalPitch");
+            this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, "AltimeterAltitude");
         }
 
-        public void NotifyPropertyChanged(string propName) {
-            if (this.PropertyChanged != null) {
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+            {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
 
-        public double Heading {
+        public double Heading
+        {
             get => this.heading;
 
-            set {
+            set
+            {
                 this.heading = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.Heading]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.Heading]);
             }
         }
 
-        public double VerticalSpeed {
+        public double VerticalSpeed
+        {
             get => this.verticalSpeed;
 
-            set {
+            set
+            {
                 this.verticalSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.VerticalSpeed]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.VerticalSpeed]);
             }
         }
-        public double AirSpeed {
+
+        public double AirSpeed
+        {
             get => this.airSpeed;
 
-            set {
+            set
+            {
                 this.airSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.AirSpeed]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.AirSpeed]);
             }
         }
-        public double GroundSpeed {
+
+        public double GroundSpeed
+        {
             get => this.groundSpeed;
 
-            set {
+            set
+            {
                 this.groundSpeed = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.GroundSpeed]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.GroundSpeed]);
             }
         }
-        public double GpsAltitude {
+
+        public double GpsAltitude
+        {
             get => this.gpsAltitude;
 
-            set {
+            set
+            {
                 this.gpsAltitude = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.GpsAltitude]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.GpsAltitude]);
             }
         }
-        public double InternalRoll {
+
+        public double InternalRoll
+        {
             get => this.internalRoll;
 
-            set {
+            set
+            {
                 this.internalRoll = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.InternalRoll]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.InternalRoll]);
             }
         }
-        public double InternalPitch {
+
+        public double InternalPitch
+        {
             get => this.internalPitch;
 
-            set {
+            set
+            {
                 this.internalPitch = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.InternalPitch]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.InternalPitch]);
             }
         }
-        public double AltimeterAltitude {
+
+        public double AltimeterAltitude
+        {
             get => this.altimeterAltitude;
 
-            set {
+            set
+            {
                 this.altimeterAltitude = value;
-                this.NotifyPropertyChanged(this.propList[(int)FlightGear.AltimeterAltitude]);
+                this.NotifyPropertyChanged(this.propList[(int) FG_Properties.AltimeterAltitude]);
             }
         }
     }
