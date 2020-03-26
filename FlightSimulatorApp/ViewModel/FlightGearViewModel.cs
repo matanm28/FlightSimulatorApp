@@ -9,7 +9,7 @@ namespace FlightSimulatorApp.ViewModel {
     using FlightSimulatorApp.Model;
 
     public class FlightGearViewModel : INotifyPropertyChanged {
-        private IModel model;
+        private IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Properties
@@ -57,7 +57,7 @@ namespace FlightSimulatorApp.ViewModel {
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object"/> class.</summary>
         /// <param name="model"></param>
-        public FlightGearViewModel(IModel model) {
+        public FlightGearViewModel(IFlightSimulatorModel model) {
             this.model = model;
             model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
