@@ -26,11 +26,9 @@ namespace FlightSimulatorApp {
         private FlightGearViewModel vm;
         public MainWindow() {
             InitializeComponent();
-            this.vm = new FlightGearViewModel(new Model.Model());
+            this.vm = new FlightGearViewModel(new Model.FlightSimulatorModel());
             this.DataContext = this.vm;
-            this.Joystick.DataContext = this.vm;
-            this.ControlsDisplay.DataContext = this.vm;
-            this.BingMap.DataContext = this.vm;
+            this.Joystick.CoordinatesChanged += updateJoystickValues;
             this.vm.Start("127.0.0.1", 5402);
         }
 
@@ -40,6 +38,16 @@ namespace FlightSimulatorApp {
         private void Window_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) {
             this.Joystick.lostFocus();
         }
+
+        private void updateJoystickValues(double x, double y) {
+            this.vm.VM_Aileron = x;
+            this.vm.VM_Elevator = y;
+        }
+
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
+            this.Joystick.keyboardPressed(sender,e);
+        }
+
 
     }
 }

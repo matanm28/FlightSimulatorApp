@@ -14,9 +14,9 @@ namespace FlightSimulatorApp.Model.Tests {
 
         public void ConnectTest() {
             TelnetClient client = new TelnetClient();
-            client.Connect("127.0.0.1", 5402);
+            client.connect("127.0.0.1", 5402);
 
-            Assert.AreEqual(true, client.IsConnected());
+            Assert.AreEqual(true, client.isConnected());
         }
 
         [TestMethod()]
@@ -25,11 +25,11 @@ namespace FlightSimulatorApp.Model.Tests {
             string expected = "/instrumentation/heading-indicator/indicated-heading-deg =  (double)\r\n/> ";
             string expected1 = "/controls/engines/current-engine/throttle =  (double)\r\n/> ";
             TelnetClient client = new TelnetClient();
-            client.Connect("127.0.0.1", 5402);
-            client.Send("get /instrumentation/heading-indicator/indicated-heading-deg \r\n");
-            string result = client.Read();
-            client.Send("set /controls/engines/current-engine/throttle 1 \r\n");
-            string result1 = client.Read();
+            client.connect("127.0.0.1", 5402);
+            client.send("get /instrumentation/heading-indicator/indicated-heading-deg \r\n");
+            string result = client.read();
+            client.send("set /controls/engines/current-engine/throttle 1 \r\n");
+            string result1 = client.read();
             int index = result.IndexOf('\'');
             int end = result.IndexOf('\'', index + 1);
             result = result.Remove(index, end - index + 1);

@@ -4,21 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightSimulatorApp.Model
-{
+namespace FlightSimulatorApp.Model {
     using Microsoft.Win32;
 
-    interface ITelnetClient
-    {
-        void Connect(string ip, int port);
+    public interface ITelnetClient {
+        void connect(string ip, int port);
 
-        bool IsConnected();
+        bool isConnected();
 
-        void Disconnect();
+        void disconnect();
 
-        void Send(string data);
+        void send(string data);
 
-        string Read(int numOfBytes);
-        string Read();
+        string read();
+
+        void flush();
     }
 }

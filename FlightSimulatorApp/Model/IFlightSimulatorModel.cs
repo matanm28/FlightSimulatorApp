@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightSimulatorApp.Model
-{
+namespace FlightSimulatorApp.Model {
     using System.ComponentModel;
 
-    interface IModel : INotifyPropertyChanged
-
-    {
+    public interface IFlightSimulatorModel : INotifyPropertyChanged {
         void Connect(string ip, int port);
 
         void Disconnect();
@@ -33,6 +30,11 @@ namespace FlightSimulatorApp.Model
         double InternalPitch { get; set; }
 
         double AltimeterAltitude { get; set; }
+
+        double Throttle { get; set; }
+        double Rudder { get; set; }
+        double Elevator { get; set; }
+        double Aileron { get; set; }
 
         double Longitude { get; set; }
 

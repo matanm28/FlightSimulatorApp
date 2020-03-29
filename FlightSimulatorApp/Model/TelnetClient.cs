@@ -22,12 +22,12 @@ namespace FlightSimulatorApp.Model {
         private TcpClient client;
 
         /// <summary>The buffer</summary>
-        private String buffer;
+        private string buffer;
 
         /// <summary>Connects the specified IP.</summary>
         /// <param name="ip">The IP.</param>
         /// <param name="port">The port.</param>
-        public void Connect(string ip, int port) {
+        public void connect(string ip, int port) {
             this.client = new TcpClient(AddressFamily.InterNetwork);
 
             this.buffer = string.Empty;
@@ -46,45 +46,21 @@ namespace FlightSimulatorApp.Model {
         }
 
         /// <summary>Disconnects this instance.</summary>
-        public void Disconnect() {
+        public void disconnect() {
             this.client.Close();
         }
 
         /// <summary>Sends the specified data.</summary>
         /// <param name="data">The data.</param>
-        public void Send(string data) {
+        public void send(string data) {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = Encoding.ASCII.GetBytes(data);
             ns.Write(dataBytes, 0, dataBytes.Length);
         }
 
-        /// <summary>Reads the specified number of bytes.</summary>
-        /// <param name="numOfBytes">The number of bytes to read from buffer.</param>
-        /// <returns> a data string of length <param name="numOfBytes"></param> from the buffer</returns>
-        public string Read(int numOfBytes) {
-            NetworkStream ns = this.client.GetStream();
-            byte[] dataBytes = new byte[Size];
-            string dataToSend = string.Empty;
-            ////buffer contains all data
-            if (this.buffer.Length >= numOfBytes) {
-                dataToSend = this.buffer.Substring(0, numOfBytes);
-                this.buffer = this.buffer.Remove(0, numOfBytes);
-            } else {
-                ////reads from network stream
-                do {
-                    ns.Read(dataBytes, 0, Size);
-                    this.buffer += Encoding.ASCII.GetString(dataBytes);
-                }
-                while (this.buffer.Length < numOfBytes);
-                dataToSend = this.buffer.Substring(0, numOfBytes);
-                this.buffer = this.buffer.Remove(0, numOfBytes);
-            }
-            return dataToSend;
-        }
-
         /// <summary>Reads this instance.</summary>
         /// <returns>the entire buffer as string</returns>
-        public string Read() {
+        public string read() {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = new byte[Size];
             string dataToSend = string.Empty;
@@ -92,24 +68,35 @@ namespace FlightSimulatorApp.Model {
                 int bytesRead = ns.Read(dataBytes, 0, Size);
                 this.buffer += Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
             }
+
             int index = this.buffer.IndexOf('>');
             if (index != -1) {
                 dataToSend = this.buffer.Substring(0, index);
                 dataToSend = this.getValue(dataToSend);
                 this.buffer = this.buffer.Remove(0, index + 2);
             }
+
             return dataToSend;
         }
-        public bool IsConnected() {
+
+        public bool isConnected() {
             return this.client.Connected;
         }
 
-        public string getValue(string input)
-        {
-            //  dataToSend = dataToSend.Substring(dataToSend.IndexOf('\'') + 1,dataToSend.IndexOf('\'', dataToSend.IndexOf('\'') + 1) - dataToSend.IndexOf('\'') - 1);
+        public void flush() {
+            this.client.GetStream().Flush();
+        }
+
+        public string getValue(string input) {
+            // dataToSend = dataToSend.Substring(dataToSend.IndexOf('\'') + 1,dataToSend.IndexOf('\'', dataToSend.IndexOf('\'') + 1) - dataToSend.IndexOf('\'') - 1);
             int startIndex = input.IndexOf('\'') + 1;
             int lenght = input.IndexOf('\'', startIndex) - startIndex;
             return input.Substring(startIndex, lenght);
+        }
+
+        public string Delimiter {
+            get { return "\r\n>"; }
+            set { }
         }
     }
 }

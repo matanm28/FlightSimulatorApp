@@ -62,6 +62,10 @@
       <DependentUpon>BingMap.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TextBoxConverter.cs" />
+    <Compile Include="Model\FG_Data.cs" />
+    <Compile Include="Model\FlightGearTCPHandler.cs" />
+    <Compile Include="Model\TelnetClientV2.cs" />
+    <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
     <Page Include="Controls\BingMap.xaml">
       <SubType>Designer</SubType>
@@ -95,9 +99,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\IModel.cs" />
+    <Compile Include="Model\IFlightSimulatorModel.cs" />
     <Compile Include="Model\ITelnetClient.cs" />
-    <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\FlightSimulatorModel.cs" />
     <Compile Include="Model\TelnetClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
