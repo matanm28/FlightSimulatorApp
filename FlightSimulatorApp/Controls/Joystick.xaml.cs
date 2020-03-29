@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 
 namespace FlightSimulatorApp.Controls {
     using System.Runtime.CompilerServices;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Media.Animation;
 
     /// <summary>
@@ -51,6 +52,7 @@ namespace FlightSimulatorApp.Controls {
             this.ellipseCenter = new Point(this.borderEllipse.Width / 2, this.borderEllipse.Height / 2);
             this.borderRadius = this.borderEllipse.Width / 2;
         }
+        
 
         private void JoyStick_MouseUp(object sender, MouseButtonEventArgs e) {
             if (this.mousePressed) {
@@ -141,5 +143,10 @@ namespace FlightSimulatorApp.Controls {
                 this.rudder.Value -= this.rudder.SmallChange;
             }
         }
+
+        private void UserControl_KeyDown(object sender, KeyEventArgs e) {
+            keyboardPressed(sender, e);
+        }
+
     }
 }

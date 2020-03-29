@@ -4,22 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="450">
+             d:DesignHeight="400" d:DesignWidth="450" Background="Gray">
     <Viewbox>
         <Grid>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
             <Canvas x:Name="Base" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Width="340" Height="340" MouseMove="JoyStick_MouseMove">
                 <Ellipse HorizontalAlignment="Left" Height="340" VerticalAlignment="Top" Width="340">
@@ -189,8 +197,28 @@
                     </Canvas.Resources>
                 </Canvas>
             </Canvas>
-            <Slider x:Name="throttle" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="0 0 10 0" VerticalAlignment="Center" Value="{Binding VM_Throttle, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay}" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickPlacement="BottomRight" TickFrequency="0.1" MinWidth="20" MinHeight="300" MaxHeight="350" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
-            <Slider x:Name="rudder" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Margin="30 10 0 0" HorizontalAlignment="Center" Value="{Binding VM_Rudder, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay}" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickPlacement="BottomRight" TickFrequency="0.1" MaxWidth="350" MinWidth="300" MinHeight="20" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick"></Slider>
+            <Slider x:Name="throttle" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Row="1" Grid.RowSpan="3" Margin="0 0 20 0" VerticalAlignment="Center" Value="{Binding VM_Throttle, UpdateSourceTrigger=PropertyChanged , Mode=OneWayToSource}" Maximum="1" Minimum="0" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical" TickFrequency="0.1" MinWidth="30" MinHeight="300" MaxHeight="350" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick" Background="#FF4C71B2" RenderTransformOrigin="0.5,0.5">
+                <Slider.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1.5"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Slider.RenderTransform>
+            </Slider>
+            <TextBlock  Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Top" Text="{Binding ElementName=throttle, Path=Value, StringFormat='Throttle: {0:F1}'}"/>
+            <Slider x:Name="rudder" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Margin="40 20 0 0" HorizontalAlignment="Center" Value="{Binding VM_Rudder, UpdateSourceTrigger=PropertyChanged , Mode=OneWayToSource}" Maximum="1" Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickFrequency="0.1" MaxWidth="350" MinWidth="300" MinHeight="20" IsMoveToPointEnabled="True" MouseDoubleClick="Throttle_MouseDoubleClick" Background="#FF4C71B2" RenderTransformOrigin="0.5,0.5">
+                <Slider.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1.5"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Slider.RenderTransform>
+            </Slider>
+            <TextBlock  Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 5 20 0 " Text="{Binding ElementName=rudder, Path=Value, StringFormat='Rudder: {0:F1}'}"/>
         </Grid>
     </Viewbox>
 </UserControl>

@@ -204,7 +204,6 @@ namespace FlightSimulatorApp.Model {
                     stringBuilder.Append(c);
                 }
             }
-
             return stringBuilder.ToString();
         }
     }
