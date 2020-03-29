@@ -16,13 +16,14 @@ namespace FlightSimulatorApp.Model
         private enum FG_Properties
         {
             Heading = 0,
-            VerticalSpeed = 1,
-            GroundSpeed = 2,
-            AirSpeed = 3,
-            GpsAltitude = 4,
-            InternalRoll = 5,
-            InternalPitch = 6,
-            AltimeterAltitude = 7
+            VerticalSpeed,
+            GroundSpeed,
+            AirSpeed,
+            GpsAltitude,
+            InternalRoll,
+            InternalPitch,
+            AltimeterAltitude,
+            Longitude
         }
 
         private ITelnetClient client;
@@ -38,6 +39,7 @@ namespace FlightSimulatorApp.Model
         private double internalRoll;
         private double internalPitch;
         private double altimeterAltitude;
+        private double longitude;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -90,6 +92,7 @@ namespace FlightSimulatorApp.Model
             this.paramPathList.Insert((int) FG_Properties.InternalRoll, "/instrumentation/attitude-indicator/internal-roll-deg");
             this.paramPathList.Insert((int) FG_Properties.InternalPitch, "/instrumentation/attitude-indicator/internal-pitch-deg");
             this.paramPathList.Insert((int) FG_Properties.AltimeterAltitude, "/instrumentation/altimeter/indicated-altitude-ft");
+            this.paramPathList.Insert((int) FG_Properties.Longitude, "/position/longitude-deg");
         }
 
 
@@ -204,6 +207,15 @@ namespace FlightSimulatorApp.Model
             {
                 this.altimeterAltitude = value;
                 this.NotifyPropertyChanged("AltimeterAltitude");
+            }
+        }
+
+        public double Longitude {
+            get => this.longitude;
+
+            set {
+                this.longitude = value;
+                this.NotifyPropertyChanged("Longitude");
             }
         }
     }

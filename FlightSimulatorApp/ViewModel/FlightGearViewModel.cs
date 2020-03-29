@@ -37,6 +37,10 @@ namespace FlightSimulatorApp.ViewModel {
         double VM_AltimeterAltitude {
             get { return this.model.AltimeterAltitude; }
         }
+        
+        double VM_Longitude {
+            get { return this.model.Longitude; }
+        }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object"/> class.</summary>
         /// <param name="model"></param>

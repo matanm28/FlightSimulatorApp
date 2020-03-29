@@ -34,5 +34,7 @@ namespace FlightSimulatorApp.Model
 
         double AltimeterAltitude { get; set; }
 
+        double Longitude { get; set; }
+
     }
 }

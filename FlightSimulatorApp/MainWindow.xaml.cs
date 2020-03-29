@@ -30,6 +30,7 @@ namespace FlightSimulatorApp {
             this.DataContext = this.vm;
             this.Joystick.DataContext = this.vm;
             this.ControlsDisplay.DataContext = this.vm;
+            this.BingMap.DataContext = this.vm;
             this.vm.Start("127.0.0.1", 5402);
         }
 

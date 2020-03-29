@@ -8,9 +8,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
         <m:Map x:Name="MyMap" CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0" Mode="AerialWithLabels" Margin="-10,0,10,0" Center="37.806029,-122.407007" ZoomLevel="0">
             <m:Pushpin Location="32.002644, 34.888781"/>
             <TextBlock x:Name="CurrentPosition" FontSize="20" Grid.Column="1" Grid.Row="1" Foreground="WhiteSmoke" ></TextBlock>
+            <TextBox
+                Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay}"
+                FontWeight="Bold"
+                Grid.Row="0" Grid.Column="0" Margin="0 10" MinWidth="60" />
+            <TextBlock FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="10">Longitude:</TextBlock>
         </m:Map>
     </Grid>
 </UserControl>
