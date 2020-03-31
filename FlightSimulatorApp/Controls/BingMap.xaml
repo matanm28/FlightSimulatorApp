@@ -37,7 +37,7 @@
                    CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0"
                    Mode="AerialWithLabels" Center="37.806029,-122.407007"
                    ZoomLevel="0" MaxWidth="500" MaxHeight="350">
-                <m:Pushpin Location="32.002644, 34.888781" />
+                <m:Pushpin Location="32.002644, 34.888781"/>
             </m:Map>
         </Grid>
 </UserControl>
