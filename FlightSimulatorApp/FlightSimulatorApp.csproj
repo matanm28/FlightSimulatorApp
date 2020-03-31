@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Maps.MapControl.WPF">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Bing Maps WPF Control\V1\Libraries\Microsoft.Maps.MapControl.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -58,6 +61,9 @@
     <Compile Include="Controls\ConnectionControl.xaml.cs">
       <DependentUpon>ConnectionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BingMap.xaml.cs">
+      <DependentUpon>BingMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextBoxConverter.cs" />
     <Compile Include="Model\FG_Data.cs" />
     <Compile Include="Model\FlightGearTCPHandler.cs" />
@@ -65,6 +71,10 @@
     <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
     <Page Include="Controls\ConnectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BingMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
