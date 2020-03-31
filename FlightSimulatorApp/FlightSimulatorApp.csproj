@@ -61,9 +61,6 @@
     <Compile Include="Controls\ConnectionControl.xaml.cs">
       <DependentUpon>ConnectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BingMap.xaml.cs">
-      <DependentUpon>BingMap.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TextBoxConverter.cs" />
     <Compile Include="Model\FG_Data.cs" />
     <Compile Include="Model\FlightGearTCPHandler.cs" />
@@ -71,10 +68,6 @@
     <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
     <Page Include="Controls\ConnectionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\BingMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
