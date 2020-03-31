@@ -58,6 +58,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\BingMap.xaml.cs">
+      <DependentUpon>BingMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConnectionControl.xaml.cs">
       <DependentUpon>ConnectionControl.xaml</DependentUpon>
     </Compile>
@@ -67,6 +70,10 @@
     <Compile Include="Model\TelnetClientV2.cs" />
     <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
+    <Page Include="Controls\BingMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ConnectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
