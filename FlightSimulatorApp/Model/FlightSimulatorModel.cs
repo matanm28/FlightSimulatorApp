@@ -30,6 +30,8 @@ namespace FlightSimulatorApp.Model {
         private double rudder;
         private double elevator;
         private double aileron;
+        private double longitude;
+        private double latitude;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -101,6 +103,17 @@ namespace FlightSimulatorApp.Model {
                                 this.AltimeterAltitude = double.Parse(dataVector[1]);
                             }
                             break;
+                        case FlightGearInput.Longitude:
+                            if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
+                                this.Longitude = double.Parse(dataVector[1]);
+                            }
+                            break;
+                        case FlightGearInput.Latitude:
+                            if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
+                                this.Latitude = double.Parse(dataVector[1]);
+                            }
+                            break;
+
 
                         default:
                             break;
@@ -233,6 +246,25 @@ namespace FlightSimulatorApp.Model {
                     this.aileron = value;
                     this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, value);
                 }
+            }
+        }
+
+        public double Longitude {
+            get { return this.longitude; }
+            set
+            {
+                this.longitude = value;
+                this.NotifyPropertyChanged("Longitude");
+
+            }
+        }
+
+        public double Latitude {
+            get { return this.latitude; }
+            set {
+                this.latitude = value;
+                this.NotifyPropertyChanged("Latitude");
+
             }
         }
     }

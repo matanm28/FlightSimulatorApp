@@ -1,24 +1,43 @@
 ﻿<UserControl x:Class="FlightSimulatorApp.Controls.BingMap"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <local:TextBoxConverter x:Key="dataConverter" />
+    </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <m:Map x:Name="MyMap" CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0" Mode="AerialWithLabels" Margin="-10,0,10,0" Center="37.806029,-122.407007" ZoomLevel="0">
-            <m:Pushpin Location="32.002644, 34.888781"/>
-            <TextBlock x:Name="CurrentPosition" FontSize="20" Grid.Column="1" Grid.Row="1" Foreground="WhiteSmoke" ></TextBlock>
-            <TextBox
-                Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay}"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Text="{Binding VM_Latitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }"
                 FontWeight="Bold"
-                Grid.Row="0" Grid.Column="0" Margin="0 10" MinWidth="60" />
-            <TextBlock FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="10">Longitude:</TextBlock>
-        </m:Map>
-    </Grid>
+                 VerticalAlignment="top"
+                FontSize="20"
+                Background="Pink" Foreground="Black"/>
+            <TextBlock x:Name="CurrentPosition" Grid.Row="3" VerticalAlignment="top" FontSize="20" Foreground="WhiteSmoke" Background="Black" Text="test" />
+            <TextBlock
+                Grid.Row="1"
+                Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }"
+                FontWeight="Bold"
+                VerticalAlignment="top"
+                FontSize="20"
+                Background="Pink" Foreground="Black"/>
+        <m:Map x:Name="MyMap"
+                   Grid.RowSpan="2" Grid.Row="2"
+                   CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0"
+                   Mode="AerialWithLabels" Center="37.806029,-122.407007"
+                   ZoomLevel="0" MaxWidth="500" MaxHeight="350">
+                <m:Pushpin Location="32.002644, 34.888781" />
+            </m:Map>
+        </Grid>
 </UserControl>

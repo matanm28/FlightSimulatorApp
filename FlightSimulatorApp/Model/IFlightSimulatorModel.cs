@@ -38,5 +38,7 @@ namespace FlightSimulatorApp.Model {
 
         double Longitude { get; set; }
 
+        double Latitude { get; set; }
+
     }
 }

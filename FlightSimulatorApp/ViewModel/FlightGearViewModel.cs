@@ -55,10 +55,15 @@ namespace FlightSimulatorApp.ViewModel {
             set { this.model.Aileron = value; }
         }
 
-        
-        double VM_Longitude {
+        public double VM_Longitude {
             get { return this.model.Longitude; }
         }
+
+        public double VM_Latitude
+        {
+            get { return this.model.Latitude; }
+        }
+
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object"/> class.</summary>
         /// <param name="model"></param>

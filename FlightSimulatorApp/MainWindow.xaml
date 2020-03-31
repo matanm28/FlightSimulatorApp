@@ -7,24 +7,31 @@
         xmlns:local="clr-namespace:FlightSimulatorApp"
         xmlns:external="clr-namespace:FlightSimulatorApp.Controls"
         mc:Ignorable="PresentationOptions"
-        Title="MainWindow" Height="500" Width="800"  LostKeyboardFocus="Window_LostKeyboardFocus" KeyDown="MainWindow_OnKeyDown">
+        Title="MainWindow" Height="200" Width="700"  LostKeyboardFocus="Window_LostKeyboardFocus" KeyDown="MainWindow_OnKeyDown">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
+            <!-- <ColumnDefinition Width="*"/> -->
+            <!-- <ColumnDefinition Width="20"/> -->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
+            <!-- <RowDefinition Height="100"/> -->
+            <!-- <RowDefinition Height="100"/> -->
+            <!-- <RowDefinition Height="20"/> -->
         </Grid.RowDefinitions>
-        <external:ControlsDisplay x:Name="ControlsDisplay" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4"></external:ControlsDisplay>
-        <external:Joystick x:Name="Joystick"  Grid.Column="3" Grid.Row="1" Grid.RowSpan ="3" ></external:Joystick>
-        <external:BingMap x:Name="BingMap"  Grid.Column="1" Grid.Row="1" Grid.RowSpan ="3" ></external:BingMap>
+        <external:BingMap x:Name="BingMap" Grid.Column="0" Grid.Row="0"></external:BingMap>
+        <Viewbox Grid.RowSpan="1" Width="150" Grid.Column ="1">
+            <external:ControlsDisplay x:Name="ControlsDisplay"></external:ControlsDisplay>
+        </Viewbox>
+        
+         <Viewbox Width = "200" Height="200" Grid.Column="3" Grid.Row="0" Grid.ColumnSpan ="1">
+            <external:Joystick x:Name="Joystick"></external:Joystick>
+        </Viewbox>
+        
+        
     </Grid>
 </Window>
