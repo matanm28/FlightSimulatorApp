@@ -176,7 +176,7 @@ namespace FlightSimulatorApp.Model {
         private IList<String> parseData(string line) {
             IList<string> dataVector = new List<string>(3);
             string[] lineArr = line.Split(" ".ToCharArray());
-            foreach (string str in lineArr) {
+            foreach (string str in lineArr) {// "path" = 'value' (casting)\r\n/>
                 if (this.getParamPath.ContainsValue(str)) {
                     dataVector.Add(this.getParamPath[str].ToString());
                     continue;

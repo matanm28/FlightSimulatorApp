@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="FlightSimulatorApp.Controls.ConnectionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="250" d:DesignWidth="500">
+    <Viewbox>
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="TextAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontStyle" Value="Italic" />
+                    <Setter Property="TextAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="10 0 0 2"></Setter>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="IP Address: "  Grid.Row="1" Grid.Column="1"/>
+            <TextBox x:Name="AddressTextBox" Text="127.0.0.1" Grid.Row="1" Grid.Column="2"/>
+            <TextBlock Text="Port: "  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"/>
+            <TextBox x:Name="PortTextBox" Text="5402" Grid.Row="2" Grid.Column="2"/>
+            <Button Content="Connect" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold" Click="Button_Click" />
+        </Grid>
+    </Viewbox>
+</UserControl>
