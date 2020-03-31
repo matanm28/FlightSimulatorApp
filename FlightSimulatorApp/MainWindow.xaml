@@ -25,6 +25,5 @@
         </Grid.RowDefinitions>
         <external:ControlsDisplay x:Name="ControlsDisplay" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4"></external:ControlsDisplay>
         <external:Joystick x:Name="Joystick"  Grid.Column="3" Grid.Row="1" Grid.RowSpan ="3" ></external:Joystick>
-        <external:BingMap x:Name="BingMap"  Grid.Column="1" Grid.Row="1" Grid.RowSpan ="3" ></external:BingMap>
     </Grid>
 </Window>
