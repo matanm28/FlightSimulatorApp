@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
     using System.Collections;
+    using System.Diagnostics;
     using System.IO;
     using System.Net.Sockets;
     using System.Reflection;
@@ -13,6 +14,7 @@ namespace FlightSimulatorApp.Model {
     using System.Threading;
     using System.Windows;
     using FlightSimulatorApp.Utilities;
+    using Timer = System.Timers.Timer;
 
     class FlightGearTCPHandler {
         public enum FG_InputProperties {
@@ -70,22 +72,31 @@ namespace FlightSimulatorApp.Model {
             this.setParamPath.Add(FG_OutputProperties.Elevator, "/controls/flight/elevator ");
 
         }
-        
 
+
+        /// <summary>Connects the specified ip.</summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
+        /// <exception cref="System.TimeoutException">if connection took longer then 15s to establish</exception>
         public void connect(string ip, int port) {
-            //todo: time manger
-            while (!this.client.isConnected()) {
+            TimeOutTimer timer = new TimeOutTimer(15);
+            timer.Start();
+            string error = string.Empty;
+            while (!this.client.isConnected() && !timer.TimePassed) {
                 try {
                     this.client.connect(ip, port);
                 } catch (SocketException socketException) {
-                    TextWriter errorWriter = Console.Error;
-                    errorWriter.WriteLine(socketException.Message);
+                    error = "Remote socket unavailable";
+                    continue;
+                } catch (ArgumentOutOfRangeException argumentOutOfRangeException) {
+                    error = "Port number out of range";
                     continue;
                 } catch (Exception e) {
-                    TextWriter errorWriter = Console.Error;
-                    errorWriter.WriteLine(e.Message);
-                    continue;
+                    error = "General Error";
                 }
+            }
+            if (timer.TimePassed) {
+                throw new TimeoutException(error);
             }
         }
 

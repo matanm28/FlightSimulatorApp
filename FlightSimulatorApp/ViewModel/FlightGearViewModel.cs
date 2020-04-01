@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace FlightSimulatorApp.ViewModel {
     using System.ComponentModel;
     using FlightSimulatorApp.Model;
+    using modelStatus = Controls.ConnectionControl.Status;
 
     public class FlightGearViewModel : INotifyPropertyChanged {
         private IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
+        private modelStatus running = modelStatus.disconnected;
 
         // Properties
         public double VM_Heading {
@@ -55,6 +57,14 @@ namespace FlightSimulatorApp.ViewModel {
             set { this.model.Aileron = value; }
         }
 
+        public modelStatus VM_Status {
+            get { return this.running; }
+            set {
+                this.running = value;
+                this.NotifyPropertyChanged("VM_Status");
+            }
+        }
+
         /// <summary>Initializes a new instance of the <see cref="T:System.Object"/> class.</summary>
         /// <param name="model"></param>
         public FlightGearViewModel(IFlightSimulatorModel model) {
@@ -62,7 +72,6 @@ namespace FlightSimulatorApp.ViewModel {
             model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
             };
-            this.VM_Throttle = 0;
         }
 
         /// <summary>Notifies the property changed.</summary>
@@ -74,8 +83,18 @@ namespace FlightSimulatorApp.ViewModel {
         }
 
         public void Start(string ip, int port) {
-            this.model.Connect(ip, port);
-            this.model.Start();
+            try {
+                this.VM_Status = modelStatus.waitingForConnection;
+                this.model.Connect(ip, port);
+                this.VM_Status = modelStatus.running;
+                this.model.Start();
+            } catch (Exception e) {
+                this.VM_Status = modelStatus.disconnected;
+            }
+        }
+
+        public void Stop() {
+            this.model.Disconnect();
         }
     }
 }

@@ -38,12 +38,21 @@ namespace FlightSimulatorApp.Model {
 
         }
 
+        /// <summary>Connects the specified ip.</summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
+        /// <exception cref="TimeoutException">if model wasn't able to connect</exception>
         public void Connect(string ip, int port) {
-            this.tcpHandler.connect(ip, port);
+            try {
+                this.tcpHandler.connect(ip, port);
+            } catch (TimeoutException timeoutException) {
+                throw timeoutException;
+            }
         }
 
         public void Disconnect() {
             this.stop = true;
+            Thread.Sleep(1000*2);
             this.tcpHandler.disconnect();
         }
 
@@ -59,7 +68,6 @@ namespace FlightSimulatorApp.Model {
                 try {
                     IList<string> dataVector = this.tcpHandler.read();
                     FlightGearInput property = stringToEnum(dataVector[0]);
-
                     switch (property) {
                         case FlightGearInput.Heading:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
@@ -108,7 +116,6 @@ namespace FlightSimulatorApp.Model {
                 } catch (Exception e) {
                     Console.WriteLine(e);
                     continue;
-                    
                 }
             }
         }

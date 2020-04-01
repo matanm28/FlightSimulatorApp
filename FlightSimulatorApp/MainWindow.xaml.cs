@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 namespace FlightSimulatorApp {
     using System.ComponentModel;
+    using System.Reflection;
     using System.Runtime.CompilerServices;
     using FlightSimulatorApp.Model;
     using FlightSimulatorApp.ViewModel;
@@ -24,12 +25,17 @@ namespace FlightSimulatorApp {
     /// </summary>
     public partial class MainWindow : Window {
         private FlightGearViewModel vm;
+        private bool connected = false;
         public MainWindow() {
             InitializeComponent();
             this.vm = new FlightGearViewModel(new Model.FlightSimulatorModel());
             this.DataContext = this.vm;
             this.Joystick.CoordinatesChanged += updateJoystickValues;
-            this.vm.Start("127.0.0.1", 5402);
+            this.ConnectionControl.onConnectEvent += connect;
+            Binding myBinding = new Binding("VM_Status");
+            myBinding.Source = this.vm.VM_Status;
+            myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            this.ConnectionControl.SetBinding(Controls.ConnectionControl.ConnectionStatusProperty, myBinding);
         }
 
         /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
@@ -45,9 +51,15 @@ namespace FlightSimulatorApp {
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
-            this.Joystick.keyboardPressed(sender,e);
+            this.Joystick.keyboardPressed(sender, e);
         }
 
-
+        private void connect(string ip, int port) {
+            try {
+                this.vm.Start(ip, port);
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

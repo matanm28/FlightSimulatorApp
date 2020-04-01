@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
+    using System.CodeDom;
     using Microsoft.Win32;
 
     public interface ITelnetClient {
