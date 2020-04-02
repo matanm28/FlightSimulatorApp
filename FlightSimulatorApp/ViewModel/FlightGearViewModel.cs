@@ -14,6 +14,7 @@ namespace FlightSimulatorApp.ViewModel {
         private IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
         private modelStatus running = modelStatus.disconnected;
+        private Location location;
 
         // Properties
         public double VM_Heading {
