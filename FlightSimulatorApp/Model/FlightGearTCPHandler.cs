@@ -25,7 +25,9 @@ namespace FlightSimulatorApp.Model {
             GpsAltitude,
             InternalRoll,
             InternalPitch,
-            AltimeterAltitude
+            AltimeterAltitude,
+            Longitude,
+            Latitude
         }
         public enum FG_OutputProperties {
             Throttle,
@@ -64,6 +66,8 @@ namespace FlightSimulatorApp.Model {
             this.getParamPath.Add(FG_InputProperties.InternalRoll, "/instrumentation/attitude-indicator/internal-roll-deg");
             this.getParamPath.Add(FG_InputProperties.InternalPitch, "/instrumentation/attitude-indicator/internal-pitch-deg");
             this.getParamPath.Add(FG_InputProperties.AltimeterAltitude, "/instrumentation/altimeter/indicated-altitude-ft");
+            this.getParamPath.Add(FG_InputProperties.Longitude, "/position/longitude-deg");
+            this.getParamPath.Add(FG_InputProperties.Latitude, "/position/latitude-deg");
             //set parameters
             this.setParamPath = new Dictionary<FG_OutputProperties, string>();
             this.setParamPath.Add(FG_OutputProperties.Throttle, "/controls/engines/current-engine/throttle ");

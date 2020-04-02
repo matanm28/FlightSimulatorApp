@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.Model {
     using System.ComponentModel;
@@ -30,11 +31,12 @@ namespace FlightSimulatorApp.Model {
         double InternalPitch { get; set; }
 
         double AltimeterAltitude { get; set; }
+        double Latitude { get; set; }
+        double Longitude { get; set; }
 
         double Throttle { get; set; }
         double Rudder { get; set; }
         double Elevator { get; set; }
         double Aileron { get; set; }
-
     }
 }

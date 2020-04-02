@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.Model {
     using System.Collections;
@@ -30,7 +31,8 @@ namespace FlightSimulatorApp.Model {
         private double rudder;
         private double elevator;
         private double aileron;
-
+        private double longitude;
+        private double latitude;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public FlightSimulatorModel() {
@@ -117,7 +119,16 @@ namespace FlightSimulatorApp.Model {
                                 this.AltimeterAltitude = double.Parse(dataVector[1]);
                             }
                             break;
-
+                        case FlightGearInput.Longitude:
+                            if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
+                                this.Longitude = double.Parse(dataVector[1]);
+                            }
+                            break;
+                        case FlightGearInput.Latitude:
+                            if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
+                                this.Latitude = double.Parse(dataVector[1]);
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -210,6 +221,29 @@ namespace FlightSimulatorApp.Model {
                 this.NotifyPropertyChanged("AltimeterAltitude");
             }
         }
+
+        public double Longitude {
+            get => this.longitude;
+
+            set {
+                if (Math.Abs(this.longitude - value) > TOLERANCE) {
+                    this.longitude = value;
+                    this.NotifyPropertyChanged("Longitude");
+                }
+            }
+        }
+
+        public double Latitude {
+            get => this.latitude;
+
+            set {
+                if (Math.Abs(this.latitude - value) > TOLERANCE) {
+                    this.latitude = value;
+                    this.NotifyPropertyChanged("Latitude");
+                }
+            }
+        }
+
         public double Throttle {
             get => this.throttle;
 
