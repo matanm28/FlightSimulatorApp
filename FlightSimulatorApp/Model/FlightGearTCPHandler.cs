@@ -83,9 +83,9 @@ namespace FlightSimulatorApp.Model {
         /// <param name="port">The port.</param>
         /// <exception cref="System.TimeoutException">if connection took longer then 15s to establish</exception>
         public void connect(string ip, int port) {
-            TimeOutTimer timer = new TimeOutTimer(15);
-            timer.Start();
+            TimeOutTimer timer = new TimeOutTimer(5);
             string error = string.Empty;
+            timer.Start();
             while (!this.client.isConnected() && !timer.TimePassed) {
                 try {
                     this.client.connect(ip, port);

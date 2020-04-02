@@ -25,12 +25,31 @@ namespace FlightSimulatorApp {
     /// </summary>
     public partial class MainWindow : Window {
         private FlightGearViewModel vm;
+        private JoystickViewModel joystickVM;
+        private DashboardViewModel dashboardVM;
+        private MapViewModel mapVM;
         private bool connected = false;
         public MainWindow() {
             InitializeComponent();
+            this.initializeNewViewModel();
+        }
+
+        private void initializeNewViewModel() {
+            IFlightSimulatorModel model = new FlightSimulatorModel();
+            this.joystickVM = new JoystickViewModel(model);
+            this.dashboardVM = new DashboardViewModel(model);
+            this.mapVM = new MapViewModel(model);
+            this.BingMap.DataContext = this.mapVM;
+            this.Joystick.DataContext = this.joystickVM;
+            this.ControlsDisplay.DataContext = this.dashboardVM;
+            this.ConnectionControl.onConnectEvent += this.dashboardVM.Start;
+            this.ConnectionControl.onDisconnectEvent += this.dashboardVM.Stop;
+
+        }
+
+        private void intializeOldViewModel() {
             this.vm = new FlightGearViewModel(new Model.FlightSimulatorModel());
             this.DataContext = this.vm;
-            this.Joystick.CoordinatesChanged += updateJoystickValues;
             this.ConnectionControl.onConnectEvent += this.vm.Start;
             this.ConnectionControl.onDisconnectEvent += this.vm.Stop;
         }
@@ -43,8 +62,8 @@ namespace FlightSimulatorApp {
         }
 
         private void updateJoystickValues(double x, double y) {
-            this.vm.VM_Aileron = x;
-            this.vm.VM_Elevator = y;
+            this.joystickVM.VM_Aileron = x;
+            this.joystickVM.VM_Elevator = y;
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {

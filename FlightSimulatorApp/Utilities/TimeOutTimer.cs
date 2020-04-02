@@ -22,7 +22,7 @@ namespace FlightSimulatorApp.Utilities {
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public TimeOutTimer(int seconds) {
+        public TimeOutTimer(int seconds=10) {
             this.time = new TimeSpan(0,0,0,seconds);
         }
 

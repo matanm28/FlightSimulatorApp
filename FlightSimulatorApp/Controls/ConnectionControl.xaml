@@ -5,51 +5,69 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="200" d:DesignWidth="250" Loaded="UserControl_Loaded">
-    <Viewbox>
+             d:DesignHeight="180" d:DesignWidth="200" Loaded="UserControl_Loaded">
+    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" 
+             MaxWidth="300" MaxHeight="240" MinWidth="90" MinHeight="100">
         <Grid>
             <Grid.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="FontSize" Value="10" />
                     <Setter Property="FontWeight" Value="Bold" />
                     <Setter Property="TextAlignment" Value="Center" />
-                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
                 </Style>
                 <Style TargetType="TextBox">
-                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontSize" Value="12" />
                     <Setter Property="FontStyle" Value="Italic" />
                     <Setter Property="TextAlignment" Value="Center" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    <Setter Property="Margin" Value="10 0 0 2"></Setter>
-                    <Setter Property="MinWidth" Value="50"></Setter>
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="0 0 0 5" />
+                    <Setter Property="MinWidth" Value="60" />
+                    <Setter Property="MaxWidth" Value="100" />
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="FontStyle" Value="Italic" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="0 0 0 5" />
+                    <Setter Property="MinWidth" Value="100" />
+                    <Setter Property="MaxWidth" Value="160" />
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="5"/>
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="IP Address: "  Grid.Row="1" Grid.Column="1"/>
-            <TextBox x:Name="AddressTextBox" Text="127.0.0.1" Grid.Row="1" Grid.Column="2" TextChanged="AddressTextBox_TextChanged" />
-            <TextBlock Text="Port: " Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"/>
-            <TextBox x:Name="PortTextBox" Text="5402" Grid.Row="2" Grid.Column="2" TextChanged="PortTextBox_TextChanged" />
-            <Button x:Name="ConnectButton" Content="Connect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold" HorizontalAlignment="Stretch" Width="120" Click="ConnectButton_Click" />
-            <Button x:Name="DisconnectButton" Content="Disconnect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold" HorizontalAlignment="Stretch" Width="120" IsEnabled="False" Visibility="Collapsed" Click="DisconnectButton_Click" />
-            <TextBlock x:Name ="StatusTextBlock" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden"/>
-            <TextBlock x:Name ="ErrorTextBlock" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden"/>
-            
+            <TextBlock Text="IP Address: " Grid.Row="1" Grid.Column="1" />
+            <TextBox x:Name="AddressTextBox" Text="127.0.0.1" Grid.Row="1" Grid.Column="2"
+                     TextChanged="AddressTextBox_TextChanged" />
+            <TextBlock Text="Port: " Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" />
+            <TextBox x:Name="PortTextBox" Text="5402" Grid.Row="2" Grid.Column="2"
+                     TextChanged="PortTextBox_TextChanged" />
+            <Button x:Name="ConnectButton" Content="Connect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                    Click="ConnectButton_Click" />
+            <Button x:Name="DisconnectButton" Content="Disconnect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                    IsEnabled="False" Visibility="Collapsed"
+                    Click="DisconnectButton_Click" />
+            <TextBlock x:Name="StatusTextBlock" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center"
+                       HorizontalAlignment="Center" Visibility="Hidden" FontSize="14" />
+            <TextBlock x:Name="ErrorTextBlock" Grid.Row="5" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center" Visibility="Collapsed" FontSize="14" />
         </Grid>
     </Viewbox>
 </UserControl>

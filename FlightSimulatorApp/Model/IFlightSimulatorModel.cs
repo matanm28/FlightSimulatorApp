@@ -16,6 +16,7 @@ namespace FlightSimulatorApp.Model {
         void Start();
 
         //model properties
+        bool Running { get; }
         double Heading { get; set; }
 
         double VerticalSpeed { get; set; }

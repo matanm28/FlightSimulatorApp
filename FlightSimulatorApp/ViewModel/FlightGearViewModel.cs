@@ -7,6 +7,8 @@ using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.ViewModel {
     using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using FlightSimulatorApp.Controls;
     using FlightSimulatorApp.Model;
     using modelStatus = Controls.ConnectionControl.Status;
 
@@ -75,8 +77,7 @@ namespace FlightSimulatorApp.ViewModel {
             get { return this.model.Longitude; }
         }
 
-        public Location VM_Location
-        {
+        public Location VM_Location {
             get { return this.location; }
             set { this.location = value; }
         }
@@ -85,10 +86,9 @@ namespace FlightSimulatorApp.ViewModel {
         /// <param name="model"></param>
         public FlightGearViewModel(IFlightSimulatorModel model) {
             this.model = model;
-            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
+            model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
-                if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude")
-                {
+                if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {
                     this.VM_Location = new Location(VM_Latitude, VM_Longitude);
                     this.NotifyPropertyChanged("VM_Location");
                 }

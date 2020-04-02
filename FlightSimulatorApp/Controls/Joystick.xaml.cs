@@ -35,11 +35,23 @@ namespace FlightSimulatorApp.Controls {
 
         private double borderRadius;
 
-        private Point knobCenter;
+        private readonly Point knobCenter;
 
-        public delegate void CoordinatesChangedEvent(double x, double y);
+        public static readonly DependencyProperty XProperty = DependencyProperty.Register("X", typeof(double), typeof(Joystick), new PropertyMetadata(default(double)));
 
-        public event CoordinatesChangedEvent CoordinatesChanged;
+        public double X {
+            get { return (double)GetValue(XProperty); }
+            set { SetValue(XProperty, value); }
+        }
+        public static readonly DependencyProperty YProperty = DependencyProperty.Register("Y", typeof(double), typeof(Joystick), new PropertyMetadata(default(double)));
+
+        public double Y {
+            get { return (double)GetValue(YProperty); }
+            set { SetValue(YProperty, value); }
+        }
+
+
+
 
         public Joystick() {
             InitializeComponent();
@@ -74,9 +86,8 @@ namespace FlightSimulatorApp.Controls {
         private void joystickMoveValueTranslation() {
             double normalX = (this.mouseInEllipse.X - this.ellipseCenter.X) / this.borderRadius;
             double normalY = (this.mouseInEllipse.Y - this.ellipseCenter.Y) / this.borderRadius;
-            if (this.CoordinatesChanged != null) {
-                this.CoordinatesChanged(normalX, -normalY);
-            }
+            this.X = normalX;
+            this.Y = normalY;
         }
 
         private void JoyStick_MouseMove(object sender, MouseEventArgs e) {
@@ -92,12 +103,7 @@ namespace FlightSimulatorApp.Controls {
                 }
             }
         }
-
-        private void slider_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            Slider slider = sender as Slider;
-            slider.Value = 0;
-        }
-
+        
         private bool knobOutOfBound() {
             double bound = Math.Pow(this.toX - this.knobCenter.X, 2) / Math.Pow(this.borderEllipse.Width / 2, 2)
                            + Math.Pow(this.toY - this.knobCenter.Y, 2) / Math.Pow(this.borderEllipse.Height / 2, 2);
@@ -127,25 +133,6 @@ namespace FlightSimulatorApp.Controls {
 
         private void KnobBase_MouseDown(object sender, MouseButtonEventArgs e) {
             this.mousePressed = true;
-        }
-
-        public void keyboardPressed(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Up) {
-                this.throttle.Value += this.throttle.SmallChange;
-            }
-            else if (e.Key == Key.Down) {
-                this.throttle.Value -= this.throttle.SmallChange;
-            }
-            else if (e.Key == Key.Right) {
-                this.rudder.Value += this.rudder.SmallChange;
-            }
-            else if (e.Key == Key.Left) {
-                this.rudder.Value -= this.rudder.SmallChange;
-            }
-        }
-
-        private void UserControl_KeyDown(object sender, KeyEventArgs e) {
-            keyboardPressed(sender, e);
         }
     }
 }

@@ -64,13 +64,21 @@
     <Compile Include="Controls\ConnectionControl.xaml.cs">
       <DependentUpon>ConnectionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ElevatorConverter.cs" />
+    <Compile Include="Controls\MyJoystick.xaml.cs">
+      <DependentUpon>MyJoystick.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextBoxConverter.cs" />
     <Compile Include="Model\FG_Data.cs" />
     <Compile Include="Model\FlightGearTCPHandler.cs" />
     <Compile Include="Model\TelnetClientV2.cs" />
     <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="Utilities\TimeOutTimer.cs" />
+    <Compile Include="ViewModel\DashboardViewModel.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
+    <Compile Include="ViewModel\AFlightGearViewModel.cs" />
+    <Compile Include="ViewModel\JoystickViewModel.cs" />
+    <Compile Include="ViewModel\MapViewModel.cs" />
     <Page Include="Controls\BingMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -79,11 +87,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ControlsDisplay.xaml">
+    <Page Include="Controls\Dashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Joystick.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MyJoystick.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -95,8 +107,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\ControlsDisplay.xaml.cs">
-      <DependentUpon>ControlsDisplay.xaml</DependentUpon>
+    <Compile Include="Controls\Dashboard.xaml.cs">
+      <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Joystick.xaml.cs">
       <DependentUpon>Joystick.xaml</DependentUpon>

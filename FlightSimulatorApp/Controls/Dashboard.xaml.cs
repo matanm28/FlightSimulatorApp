@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace FlightSimulatorApp.Controls
 {
     /// <summary>
-    /// Interaction logic for ControlsDisplay.xaml
+    /// Interaction logic for Dashboard.xaml
     /// </summary>
     public partial class ControlsDisplay : UserControl
     {

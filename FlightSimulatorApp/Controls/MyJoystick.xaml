@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="FlightSimulatorApp.Controls.MyJoystick"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="450">
+    <UserControl.Resources>
+        <local:ElevatorConverter x:Key="ElevatorConverter" />
+    </UserControl.Resources>
+    <Viewbox MinHeight="225" MinWidth="225">
+    <Grid>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="18" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="TextAlignment" Value="Left" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+            <local:Joystick x:Name="Joystick" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2"
+                            X="{Binding VM_Aileron, UpdateSourceTrigger=PropertyChanged , Mode=OneWayToSource}"
+                            Y="{Binding VM_Elevator, UpdateSourceTrigger=PropertyChanged ,Converter={StaticResource ElevatorConverter}, Mode=OneWayToSource}"/>
+            <Slider x:Name="Throttle" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Row="1"
+                    Grid.RowSpan="2" Margin="0 25 25 0" VerticalAlignment="Center"
+                    Value="{Binding VM_Throttle, UpdateSourceTrigger=PropertyChanged , Mode=OneWayToSource}"
+                    Maximum="1" Minimum="0" SmallChange="0.01" LargeChange="0.1" Orientation="Vertical"
+                    TickFrequency="0.1" MinWidth="20" MinHeight="300" MaxHeight="350" IsMoveToPointEnabled="True"
+                    MouseDoubleClick="slider_MouseDoubleClick" Background="#FF4C71B2" RenderTransformOrigin="0.5,0.5"
+                    KeyDown="keyboardPressed">
+                <Slider.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1.5" />
+                        <SkewTransform />
+                        <RotateTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </Slider.RenderTransform>
+            </Slider>
+            <TextBlock Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Top"
+                       Text="{Binding ElementName=Throttle, Path=Value, StringFormat='Throttle: {0:F}'}" />
+            <Slider x:Name="Rudder" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="3" Margin="10 10 0 0"
+                    Style="{StaticResource Horizontal_Slider}"
+                    HorizontalAlignment="Center"
+                    Value="{Binding VM_Rudder, UpdateSourceTrigger=PropertyChanged , Mode=OneWayToSource}" Maximum="1"
+                    Minimum="-1" SmallChange="0.01" LargeChange="0.1" Orientation="Horizontal" TickFrequency="0.1"
+                    MaxWidth="350" MinWidth="300" MinHeight="20" IsMoveToPointEnabled="True"
+                    MouseDoubleClick="slider_MouseDoubleClick" Background="#FF4C71B2" RenderTransformOrigin="0.5,0.5"
+                    KeyDown="keyboardPressed">
+                <Slider.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1.5" />
+                        <SkewTransform />
+                        <RotateTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </Slider.RenderTransform>
+            </Slider>
+            <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" VerticalAlignment="Center"
+                       HorizontalAlignment="Center" Margin="0 5 20 0"
+                       Text="{Binding ElementName=Rudder, Path=Value, StringFormat='Rudder: {0:F}'}" />
+        </Grid>
+    </Viewbox>
+</UserControl>

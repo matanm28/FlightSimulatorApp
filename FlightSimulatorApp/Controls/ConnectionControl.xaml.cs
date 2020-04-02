@@ -39,7 +39,6 @@ namespace FlightSimulatorApp.Controls {
         private const string connected = "Connected to Simulator";
         private string displayText = disconnected;
         private string errorText = string.Empty;
-        private Brush colorBrush = Brushes.Gray;
         private Timer timer = new Timer();
         private bool toggleLight = true;
         private bool error = false;
@@ -79,8 +78,9 @@ namespace FlightSimulatorApp.Controls {
         }
 
 
-        private void ConnectButton_Click(object sender, RoutedEventArgs e) {
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e) {
             this.timer.Stop();
+            this.ErrorTextBlock.Visibility = Visibility.Collapsed;
             if (onConnectEvent != null) {
                 try {
                     string ip = this.AddressTextBox.Text;
@@ -105,6 +105,7 @@ namespace FlightSimulatorApp.Controls {
                 this.timer.Stop();
                 onDisconnectEvent();
                 this.ErrorTextBlock.Text = string.Empty;
+                this.ErrorTextBlock.Visibility = Visibility.Collapsed;
                 this.startDisplayText(disconnected,false);
                 this.changeButtonsDisplay(Status.disconnected);
                 

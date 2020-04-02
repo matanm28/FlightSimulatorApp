@@ -18,7 +18,7 @@ namespace FlightSimulatorApp.Model {
         
         private FlightGearTCPHandler tcpHandler;
         private const double TOLERANCE = 0.0001;
-        private volatile bool stop = false;
+        private volatile bool running = false;
         private double heading;
         private double verticalSpeed;
         private double groundSpeed;
@@ -61,12 +61,12 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void Disconnect() {
-            this.stop = true;
+            this.running = false;
             this.tcpHandler.disconnect();
         }
 
         public void Start() {
-            this.stop = false;
+            this.running = true;
             this.tcpHandler.start();
             Thread runThread = new Thread(this.run);
             runThread.Name = "runThread";
@@ -74,7 +74,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         private void run() {
-            while (!this.stop) {
+            while (this.running) {
                 try {
                     IList<string> dataVector = this.tcpHandler.read();
                     FlightGearInput property = stringToEnum(dataVector[0]);
@@ -150,6 +150,9 @@ namespace FlightSimulatorApp.Model {
             }
         }
 
+        public bool Running {
+            get { return this.running; }
+        }
         public double Heading {
             get => this.heading;
 
