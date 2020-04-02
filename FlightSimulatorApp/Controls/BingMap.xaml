@@ -24,7 +24,6 @@
                  VerticalAlignment="top"
                 FontSize="20"
                 Background="Pink" Foreground="Black"/>
-        <TextBlock x:Name="CurrentPosition" Grid.Row="3" VerticalAlignment="top" FontSize="20" Foreground="WhiteSmoke" Background="Black" Text="test" />
         <TextBlock
                 Grid.Row="1"
                 Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }"
@@ -37,7 +36,8 @@
                    CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0"
                    Mode="AerialWithLabels" Center="37.806029,-122.407007"
                    ZoomLevel="0" MaxWidth="500" MaxHeight="350">
-            <m:Pushpin Location="32.002644, 34.888781"/>
+            <m:Pushpin m:MapLayer.Position="{Binding VM_Location}"></m:Pushpin>
+            <!-- <m:Pushpin Location="32.002644, 34.888781"/> -->
         </m:Map>
     </Grid>
 </UserControl>

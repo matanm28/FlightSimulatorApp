@@ -30,8 +30,9 @@ namespace FlightSimulatorApp.Controls {
             //Gets the bounded rectangle for the current frame
             LocationRect bounds = map.BoundingRectangle;
             //Update the current latitude and longitude
-            CurrentPosition.Text += String.Format("Northwest: {0:F5}, Southeast: {1:F5} (Current)",
-                bounds.Northwest, bounds.Southeast);
+            // CurrentPosition.Text += String.Format("Northwest: {0:F}, Southeast: {1:F} (Current)",
+            //     bounds.Northwest, bounds.Southeast);
+            //32.002644, 34.888781
         }
     }
 }
