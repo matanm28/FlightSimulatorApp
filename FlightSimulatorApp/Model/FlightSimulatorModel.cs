@@ -45,18 +45,26 @@ namespace FlightSimulatorApp.Model {
         public void Connect(string ip, int port) {
             try {
                 this.tcpHandler.connect(ip, port);
+                this.resendSetValues();
             } catch (TimeoutException timeoutException) {
                 throw timeoutException;
             }
         }
 
+        private void resendSetValues() {
+            this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, this.Throttle);
+            this.tcpHandler.setParameterValue(FlightGearOutput.Rudder, this.Rudder);
+            this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, this.Aileron);
+            this.tcpHandler.setParameterValue(FlightGearOutput.Elevator, this.Elevator);
+        }
+
         public void Disconnect() {
             this.stop = true;
-            Thread.Sleep(1000*2);
             this.tcpHandler.disconnect();
         }
 
         public void Start() {
+            this.stop = false;
             this.tcpHandler.start();
             Thread runThread = new Thread(this.run);
             runThread.Name = "runThread";

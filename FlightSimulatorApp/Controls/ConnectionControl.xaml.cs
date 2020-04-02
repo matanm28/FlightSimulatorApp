@@ -22,114 +22,145 @@ namespace FlightSimulatorApp.Controls {
     /// <summary>
     /// Interaction logic for ConnectionControl.xaml
     /// </summary>
-    public partial class ConnectionControl : UserControl{
-        public enum Status { waitingForConnection, running, disconnected }
+    public partial class ConnectionControl : UserControl {
+        public enum Status { connected, disconnected }
 
         public delegate void ConnectEvent(string address, int port);
+
         public event ConnectEvent onConnectEvent;
-        
+
+        public delegate void DisconnectEvent();
+
+        public event DisconnectEvent onDisconnectEvent;
+
+        private const float Second = 1000;
         private const string disconnected = "Disconnected";
         private const string waiting = "Waiting for connection";
         private const string connected = "Connected to Simulator";
         private string displayText = disconnected;
+        private string errorText = string.Empty;
         private Brush colorBrush = Brushes.Gray;
         private Timer timer = new Timer();
         private bool toggleLight = true;
+        private bool error = false;
+
         public ConnectionControl() {
             InitializeComponent();
         }
-
-        public static DependencyProperty ConnectionStatusProperty = DependencyProperty.Register("ConnectionStatus", typeof(Status), typeof(ConnectionControl), new PropertyMetadata(Status.disconnected));
-
-        public Status ConnectionStatus {
-            get { return (Status)GetValue(ConnectionStatusProperty); }
-            set { SetValue(ConnectionStatusProperty, value); }
-        }
-
-        private static void OnConnectionStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            ConnectionControl myConnectionControl = d as ConnectionControl;
-            myConnectionControl.OnConnectionStatusChanged(e);
-        }
-
         
-
-        private void OnConnectionStatusChanged(DependencyPropertyChangedEventArgs e) {
-            Status status = Status.disconnected;
-            if (e.NewValue.GetType() == typeof(Status)) {
-                status = (Status)e.NewValue;
-            }
-            switch (status) {
-                case Status.running:
-                    this.colorBrush = Brushes.LightGreen;
-                    this.displayText = connected;
-                    break;
-                case Status.disconnected:
-                    this.colorBrush = Brushes.Red;
-                    this.displayText = disconnected;
-                    break;
-                case Status.waitingForConnection:
-                    this.colorBrush = Brushes.Gray;
-                    this.displayText = waiting;
-                    break;
-            }
-            this.animation();
-        }
-
-        
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
-            this.statusTextBlock.Text = this.displayText;
-            this.timer.Interval = 500;
+            this.ErrorTextBlock.Text = this.displayText;
+            this.timer.Interval = Second;
             this.timer.Elapsed += timer_Tick;
+            this.startDisplayText(disconnected, false);
+
         }
 
         private void timer_Tick(object sender, EventArgs e) {
             Dispatcher.Invoke(this.animation);
         }
 
-        
-
         private void animation() {
             if (this.toggleLight) {
-                this.statusTextBlock.Background = this.colorBrush;
+                this.StatusTextBlock.Visibility = Visibility.Visible;
             } else {
-                this.statusTextBlock.Background = Brushes.Gray;
+                this.StatusTextBlock.Visibility = Visibility.Hidden;
             }
 
+            if (this.error) {
+                if (this.toggleLight) {
+                    this.ErrorTextBlock.Visibility = Visibility.Visible;
+                } else {
+                    this.ErrorTextBlock.Visibility = Visibility.Hidden;
+                }
+            }
+            
             this.toggleLight = !this.toggleLight;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
+
+        private void ConnectButton_Click(object sender, RoutedEventArgs e) {
+            this.timer.Stop();
             if (onConnectEvent != null) {
                 try {
                     string ip = this.AddressTextBox.Text;
                     int port = int.Parse(this.PortTextBox.Text);
-                    onConnectEvent(ip, port);
-                    this.timer.Start();
+                    if (validatePort(port) && validateIP(ip)) {
+                        onConnectEvent(ip, port);
+                        this.startDisplayText(connected, true);
+                        this.changeButtonsDisplay(Status.connected);
+                    } else if (!validatePort(port)) {
+                        this.startDisplayText(disconnected, false, "Invalid Port!");
+                    } else {
+                        this.startDisplayText(disconnected, false, "Invalid IP");
+                    }
                 } catch (Exception exception) {
+                    this.startDisplayText(disconnected, false, exception.Message);
                 }
             }
         }
 
+        private void DisconnectButton_Click(object sender, RoutedEventArgs e) {
+            if (onDisconnectEvent != null) {
+                this.timer.Stop();
+                onDisconnectEvent();
+                this.ErrorTextBlock.Text = string.Empty;
+                this.startDisplayText(disconnected,false);
+                this.changeButtonsDisplay(Status.disconnected);
+                
+            }
+
+        }
+        
+        private void changeButtonsDisplay(Status connectionStatus) {
+            switch (connectionStatus) {
+                case Status.connected:
+                    this.ConnectButton.IsEnabled = false;
+                    this.ConnectButton.Visibility = Visibility.Collapsed;
+                    this.DisconnectButton.IsEnabled = true;
+                    this.DisconnectButton.Visibility = Visibility.Visible;
+                    break;
+                case Status.disconnected:
+                    this.ConnectButton.IsEnabled = true;
+                    this.ConnectButton.Visibility = Visibility.Visible;
+                    this.DisconnectButton.IsEnabled = false;
+                    this.DisconnectButton.Visibility = Visibility.Collapsed;
+                    break;
+            }
+
+            this.error = false;
+        }
+
+        private void startDisplayText(string text, bool connected, string errorString="") {
+            this.StatusTextBlock.Text = "Status: " + text;
+            if (connected) {
+                this.StatusTextBlock.Foreground = Brushes.LightGreen;
+            } else {
+                this.StatusTextBlock.Foreground = Brushes.Red;
+            }
+            if (errorString != string.Empty) {
+                this.error = true;
+                this.ErrorTextBlock.Text = errorString;
+            }
+            this.timer.Start();
+        }
+
         private void AddressTextBox_TextChanged(object sender, TextChangedEventArgs e) {
-            try {
-                if (this.AddressTextBox.Text == string.Empty) {
-                    this.AddressTextBox.Background = Brushes.White;
-                }
-
-                string[] stringArr = this.AddressTextBox.Text.Split(".".ToCharArray());
-
-                if (validateIP(stringArr)) {
-                    this.AddressTextBox.Background = Brushes.LightGreen;
-                } else {
-                    this.AddressTextBox.Background = Brushes.Red;
-                }
-            } catch (Exception exception) {
+            if (this.AddressTextBox.Text == string.Empty) {
+                this.AddressTextBox.Background = Brushes.White;
+            } else if (validateIP(this.AddressTextBox.Text)) {
+                this.AddressTextBox.Background = Brushes.LightGreen;
+            } else {
                 this.AddressTextBox.Background = Brushes.Red;
             }
         }
 
-        private bool validateIP(string[] stringArr) {
+        private static bool validateIP(string ip) {
+            if (ip.ToUpper() == "localhost".ToUpper()) {
+                return true;
+            }
+
+            string[] stringArr = ip.Split(".".ToCharArray());
             if (stringArr.Length != 4) {
                 return false;
             }
@@ -154,8 +185,7 @@ namespace FlightSimulatorApp.Controls {
                     this.PortTextBox.Background = Brushes.White;
                 }
 
-                int port = int.Parse(this.PortTextBox.Text);
-                if (port >= 1024 && port <= Math.Pow(2, 16)) {
+                if (validatePort(int.Parse(this.PortTextBox.Text))) {
                     this.PortTextBox.Background = Brushes.LightGreen;
                 } else {
                     this.PortTextBox.Background = Brushes.Red;
@@ -165,6 +195,9 @@ namespace FlightSimulatorApp.Controls {
             }
         }
 
+        private static bool validatePort(int port) {
+            return port >= 1024 && port <= Math.Pow(2, 16);
+        }
 
     }
 }

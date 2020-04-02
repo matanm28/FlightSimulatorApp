@@ -84,12 +84,10 @@ namespace FlightSimulatorApp.ViewModel {
 
         public void Start(string ip, int port) {
             try {
-                this.VM_Status = modelStatus.waitingForConnection;
                 this.model.Connect(ip, port);
-                this.VM_Status = modelStatus.running;
                 this.model.Start();
             } catch (Exception e) {
-                this.VM_Status = modelStatus.disconnected;
+                throw e;
             }
         }
 

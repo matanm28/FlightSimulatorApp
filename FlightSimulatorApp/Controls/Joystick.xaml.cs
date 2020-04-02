@@ -93,7 +93,7 @@ namespace FlightSimulatorApp.Controls {
             }
         }
 
-        private void Throttle_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+        private void slider_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             Slider slider = sender as Slider;
             slider.Value = 0;
         }
@@ -147,6 +147,5 @@ namespace FlightSimulatorApp.Controls {
         private void UserControl_KeyDown(object sender, KeyEventArgs e) {
             keyboardPressed(sender, e);
         }
-
     }
 }

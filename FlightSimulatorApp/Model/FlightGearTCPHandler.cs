@@ -95,7 +95,7 @@ namespace FlightSimulatorApp.Model {
                     error = "General Error";
                 }
             }
-            if (timer.TimePassed) {
+            if (timer.TimePassed && !this.client.isConnected()) {
                 throw new TimeoutException(error);
             }
         }
@@ -103,9 +103,10 @@ namespace FlightSimulatorApp.Model {
         public void disconnect() {
             this.stop();
             while (this.threadsLive()) {
-                Thread.Sleep(2500);
+                Thread.Sleep(1000);
             }
             this.client.disconnect();
+            this.threadsList = new List<Thread>();
         }
 
         public void start() {

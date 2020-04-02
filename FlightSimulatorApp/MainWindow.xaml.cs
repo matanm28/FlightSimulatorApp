@@ -31,11 +31,8 @@ namespace FlightSimulatorApp {
             this.vm = new FlightGearViewModel(new Model.FlightSimulatorModel());
             this.DataContext = this.vm;
             this.Joystick.CoordinatesChanged += updateJoystickValues;
-            this.ConnectionControl.onConnectEvent += connect;
-            Binding myBinding = new Binding("VM_Status");
-            myBinding.Source = this.vm.VM_Status;
-            myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            this.ConnectionControl.SetBinding(Controls.ConnectionControl.ConnectionStatusProperty, myBinding);
+            this.ConnectionControl.onConnectEvent += this.vm.Start;
+            this.ConnectionControl.onDisconnectEvent += this.vm.Stop;
         }
 
         /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
@@ -52,14 +49,6 @@ namespace FlightSimulatorApp {
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
             this.Joystick.keyboardPressed(sender, e);
-        }
-
-        private void connect(string ip, int port) {
-            try {
-                this.vm.Start(ip, port);
-            } catch (Exception e) {
-                Console.WriteLine(e);
-            }
         }
     }
 }

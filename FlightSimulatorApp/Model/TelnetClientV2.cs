@@ -31,6 +31,7 @@ namespace FlightSimulatorApp.Model {
 
         public void disconnect() {
             this.client.Close();
+            this.client = new TcpClient(AddressFamily.InterNetwork);
         }
 
         public void send(string data) {
@@ -45,15 +46,19 @@ namespace FlightSimulatorApp.Model {
             this.client.GetStream().Flush();
         }
         public string read() {
+            string dataToSend = string.Empty;
             if (this.isConnected()) {
                 NetworkStream ns = this.client.GetStream();
-                byte[] dataBytes = new byte[Size];
-                int bytesRead = ns.Read(dataBytes, 0, Size);
-                string dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
-                return dataToSend;
+                if (ns.DataAvailable) {
+                    byte[] dataBytes = new byte[Size];
+                    int bytesRead = ns.Read(dataBytes, 0, Size);
+                    dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
+                    return dataToSend;
+                }
             }
-            throw new Exception("Client disconnected, turn FlightGear on and press connect");
-            
+
+            return dataToSend;
+
         }
     }
 }
