@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,10 @@ namespace FlightSimulatorApp.Model {
         
         private FlightGearTCPHandler tcpHandler;
         private const double TOLERANCE = 0.0001;
+        private const double MIN_LATITUDE = -90.0;
+        private const double MAX_LATITUDE = 90.0;
+        private const double MIN_LONGITUDE = -180.0;
+        private const double MAX_LONGITUDE = 180.0;
         private volatile bool running = false;
         private double heading;
         private double verticalSpeed;
@@ -33,6 +38,7 @@ namespace FlightSimulatorApp.Model {
         private double aileron;
         private double longitude;
         private double latitude;
+        private string errorBoundaries;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public FlightSimulatorModel() {
@@ -230,8 +236,16 @@ namespace FlightSimulatorApp.Model {
 
             set {
                 if (Math.Abs(this.longitude - value) > TOLERANCE) {
-                    this.longitude = value;
-                    this.NotifyPropertyChanged("Longitude");
+                    if(value <= MAX_LONGITUDE && value >= MIN_LONGITUDE)
+                    {
+                        this.longitude = value;
+                        this.NotifyPropertyChanged("Longitude");
+                    }
+                    else
+                    {
+                        this.ErrorBoundaries = "out of boundaries";
+                        this.NotifyPropertyChanged("ErrorBoundaries");
+                    }
                 }
             }
         }
@@ -241,10 +255,33 @@ namespace FlightSimulatorApp.Model {
 
             set {
                 if (Math.Abs(this.latitude - value) > TOLERANCE) {
-                    this.latitude = value;
-                    this.NotifyPropertyChanged("Latitude");
+                    if (value <= MAX_LATITUDE && value >= MIN_LATITUDE)
+                    {
+                        this.latitude = value;
+                        this.ErrorBoundaries = "";
+                    }
+                    else
+                    {
+                        if (value <= MAX_LATITUDE)
+                        {
+                            this.latitude = MIN_LATITUDE;
+                        }
+                        else
+                        {
+                            this.latitude = MAX_LATITUDE;
+                        }
+                        this.ErrorBoundaries = "out of boundaries";
+                    }
                 }
+                this.NotifyPropertyChanged("Latitude");
+                this.NotifyPropertyChanged("ErrorBoundaries");
             }
+        }
+
+        public string ErrorBoundaries {
+            get => this.errorBoundaries;
+
+            set { this.errorBoundaries = value; }
         }
 
         public double Throttle {

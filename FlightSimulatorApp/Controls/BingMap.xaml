@@ -13,7 +13,7 @@
     <Grid>
         <Grid.Resources>
             <Style TargetType="TextBlock">
-                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontSize" Value="10" />
                 <Setter Property="FontWeight" Value="Bold" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Background" Value="Pink" />
@@ -22,30 +22,31 @@
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="55" />
+            <ColumnDefinition Width="440" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Latitude: "/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Latitude: "/>
         <TextBlock
-            Grid.Row="1" Grid.Column="2"
+            Grid.Row="1" Grid.Column="1"
             Text="{Binding VM_Latitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }" />
-        <TextBlock Grid.Row="1" Grid.Column="3" Text="Longitude: "/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Longitude: "/>
         <TextBlock
-            Grid.Row="1" Grid.Column="4"
+            Grid.Row="2" Grid.Column="1"
             Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }"/>
+        <TextBlock 
+            Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+            Text="{Binding VM_ErrorBoundaries, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter}}"/>
         <m:Map x:Name="MyMap"
-               Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4"
+               Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
                CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0"
                Mode="AerialWithLabels" Center="37.806029,-122.407007"
                ZoomLevel="0">

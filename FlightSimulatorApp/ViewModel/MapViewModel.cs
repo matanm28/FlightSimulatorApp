@@ -20,6 +20,7 @@ namespace FlightSimulatorApp.ViewModel {
                 if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {
                     this.VM_Location = new Location(VM_Latitude, VM_Longitude);
                     this.NotifyPropertyChanged("VM_Location");
+                    this.NotifyPropertyChanged("VM_ErrorBoundaries");
                 }
             };
         }
@@ -34,6 +35,10 @@ namespace FlightSimulatorApp.ViewModel {
 
         public double VM_Longitude {
             get { return this.model.Longitude; }
+        }
+
+        public string VM_ErrorBoundaries {
+            get { return $"this.model.ErrorBoundaries"; }
         }
 
         public Location VM_Location {

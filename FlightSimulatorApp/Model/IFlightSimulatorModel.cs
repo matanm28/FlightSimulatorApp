@@ -39,5 +39,7 @@ namespace FlightSimulatorApp.Model {
         double Rudder { get; set; }
         double Elevator { get; set; }
         double Aileron { get; set; }
+
+        string ErrorBoundaries { get; set; }
     }
 }
