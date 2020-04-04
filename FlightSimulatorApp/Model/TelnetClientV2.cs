@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
+    using System.IO;
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
@@ -35,10 +36,15 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void send(string data) {
-            if (this.isConnected()) {
-                NetworkStream networkStream = this.client.GetStream();
-                byte[] sendBytes = Encoding.ASCII.GetBytes(data);
-                networkStream.Write(sendBytes, 0, sendBytes.Length);
+            //todo wrap try catch and disconnect
+            try {
+                if (this.isConnected()) {
+                    NetworkStream networkStream = this.client.GetStream();
+                    byte[] sendBytes = Encoding.ASCII.GetBytes(data);
+                    networkStream.Write(sendBytes, 0, sendBytes.Length);
+                }
+            } catch (Exception e) {
+                throw new IOException();
             }
         }
 
@@ -49,13 +55,17 @@ namespace FlightSimulatorApp.Model {
             string dataToSend = string.Empty;
             if (this.isConnected()) {
                 NetworkStream ns = this.client.GetStream();
-                if (ns.DataAvailable) {
-                    byte[] dataBytes = new byte[Size];
-                    int bytesRead = ns.Read(dataBytes, 0, Size);
-                    dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
-                    return dataToSend;
+                try {
+                    if (ns.DataAvailable) {
+                        byte[] dataBytes = new byte[Size];
+                        int bytesRead = ns.Read(dataBytes, 0, Size);
+                        dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
+                        return dataToSend;
+                    }
+                } catch (Exception e) {
+                    throw new IOException();
                 }
-            }
+            } 
 
             return dataToSend;
 

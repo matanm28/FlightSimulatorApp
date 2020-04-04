@@ -44,7 +44,7 @@
             Text="{Binding VM_Longitude, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter} }"/>
         <TextBlock 
             Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-            Text="{Binding VM_ErrorBoundaries, UpdateSourceTrigger=PropertyChanged, Mode=oneWay,Converter={StaticResource dataConverter}}"/>
+            Text="{Binding VM_ErrorBoundaries, UpdateSourceTrigger=PropertyChanged, Mode=oneWay}"/>
         <m:Map x:Name="MyMap"
                Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
                CredentialsProvider="WOD3P20BI4wrNSVeeKf1~N3kxV-g7se83Fd_Kplli-A~ApK2fy57rWvJE-a4YXxqRfGLHpYfF4TDwsxqiU1B9sjkn6KZ-PoYal-YwHNRonw0"

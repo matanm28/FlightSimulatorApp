@@ -5,78 +5,72 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
-    using System.Collections;
-    using System.Diagnostics;
-    using System.IO;
     using System.Net.Sockets;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
     using System.Threading;
-    using System.Windows;
     using FlightSimulatorApp.Utilities;
-    using Timer = System.Timers.Timer;
+    using getProperties = FlightGearTCPHandler.FG_InputProperties;
+    using setProperties = FlightGearTCPHandler.FG_OutputProperties;
 
-    public class FlightGearTCPHandler : ITCPHandler{
-        public enum FG_InputProperties {
-            Heading,
-            VerticalSpeed,
-            GroundSpeed,
-            AirSpeed,
-            GpsAltitude,
-            InternalRoll,
-            InternalPitch,
-            AltimeterAltitude,
-            Longitude,
-            Latitude
-        }
-        public enum FG_OutputProperties {
-            Throttle,
-            Rudder,
-            Elevator,
-            Aileron
-        }
-        private BiDictionary<FG_InputProperties, string> getParamPath;
-        private Dictionary<FG_OutputProperties, string> setParamPath;
+    public class DummyServerTCPHandler : ITCPHandler {
+        private BiDictionary<getProperties, string> getParamPath;
+        private Dictionary<setProperties, string> setParamPath;
         private IList<Thread> threadsList;
         private string buffer = string.Empty;
         private ITelnetClient client;
         private volatile bool stopped;
-        private const string Delimiter = "\r\n/>";
+        private const string Delimiter = "\n";
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public FlightGearTCPHandler(ITelnetClient client) {
+        public DummyServerTCPHandler(ITelnetClient client) {
             this.client = client;
             this.threadsList = new List<Thread>();
             this.initializeParametersMap();
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public FlightGearTCPHandler() : this(new TelnetClientV2()) {
-
+        public DummyServerTCPHandler()
+            : this(new TelnetClientV2()) {
         }
 
         private void initializeParametersMap() {
-            //get parameters
-            this.getParamPath = new BiDictionary<FG_InputProperties, string>();
-            this.getParamPath.Add(FG_InputProperties.Heading, "/instrumentation/heading-indicator/indicated-heading-deg");
-            this.getParamPath.Add(FG_InputProperties.VerticalSpeed, "/instrumentation/gps/indicated-vertical-speed");
-            this.getParamPath.Add(FG_InputProperties.GroundSpeed, "/instrumentation/gps/indicated-ground-speed-kt");
-            this.getParamPath.Add(FG_InputProperties.AirSpeed, "/instrumentation/airspeed-indicator/indicated-speed-kt");
-            this.getParamPath.Add(FG_InputProperties.GpsAltitude, "/instrumentation/gps/indicated-altitude-ft");
-            this.getParamPath.Add(FG_InputProperties.InternalRoll, "/instrumentation/attitude-indicator/internal-roll-deg");
-            this.getParamPath.Add(FG_InputProperties.InternalPitch, "/instrumentation/attitude-indicator/internal-pitch-deg");
-            this.getParamPath.Add(FG_InputProperties.AltimeterAltitude, "/instrumentation/altimeter/indicated-altitude-ft");
-            this.getParamPath.Add(FG_InputProperties.Longitude, "/position/longitude-deg");
-            this.getParamPath.Add(FG_InputProperties.Latitude, "/position/latitude-deg");
-            //set parameters
-            this.setParamPath = new Dictionary<FG_OutputProperties, string>();
-            this.setParamPath.Add(FG_OutputProperties.Throttle, "/controls/engines/current-engine/throttle ");
-            this.setParamPath.Add(FG_OutputProperties.Rudder, "/controls/flight/rudder ");
-            this.setParamPath.Add(FG_OutputProperties.Aileron, "/controls/flight/aileron ");
-            this.setParamPath.Add(FG_OutputProperties.Elevator, "/controls/flight/elevator ");
+            // get parameters
+            this.getParamPath = new BiDictionary<getProperties, string>();
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.Heading,
+                "/instrumentation/heading-indicator/indicated-heading-deg");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.VerticalSpeed,
+                "/instrumentation/gps/indicated-vertical-speed");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.GroundSpeed,
+                "/instrumentation/gps/indicated-ground-speed-kt");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.AirSpeed,
+                "/instrumentation/airspeed-indicator/indicated-speed-kt");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.GpsAltitude,
+                "/instrumentation/gps/indicated-altitude-ft");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.InternalRoll,
+                "/instrumentation/attitude-indicator/internal-roll-deg");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.InternalPitch,
+                "/instrumentation/attitude-indicator/internal-pitch-deg");
+            this.getParamPath.Add(
+                FlightGearTCPHandler.FG_InputProperties.AltimeterAltitude,
+                "/instrumentation/altimeter/indicated-altitude-ft");
+            this.getParamPath.Add(FlightGearTCPHandler.FG_InputProperties.Longitude, "/position/longitude-deg");
+            this.getParamPath.Add(FlightGearTCPHandler.FG_InputProperties.Latitude, "/position/latitude-deg");
 
+            // set parameters
+            this.setParamPath = new Dictionary<setProperties, string>();
+            this.setParamPath.Add(
+                FlightGearTCPHandler.FG_OutputProperties.Throttle,
+                "/controls/engines/current-engine/throttle ");
+            this.setParamPath.Add(FlightGearTCPHandler.FG_OutputProperties.Rudder, "/controls/flight/rudder ");
+            this.setParamPath.Add(FlightGearTCPHandler.FG_OutputProperties.Aileron, "/controls/flight/aileron ");
+            this.setParamPath.Add(FlightGearTCPHandler.FG_OutputProperties.Elevator, "/controls/flight/elevator ");
         }
-
 
         /// <summary>Connects the specified ip.</summary>
         /// <param name="ip">The ip.</param>
@@ -99,6 +93,7 @@ namespace FlightSimulatorApp.Model {
                     error = "General Error";
                 }
             }
+
             if (timer.TimePassed && !this.client.isConnected()) {
                 throw new TimeoutException(error);
             }
@@ -109,6 +104,7 @@ namespace FlightSimulatorApp.Model {
             while (this.threadsLive()) {
                 Thread.Sleep(1000);
             }
+
             this.client.disconnect();
             this.threadsList = new List<Thread>();
         }
@@ -116,10 +112,9 @@ namespace FlightSimulatorApp.Model {
         public void start() {
             this.stopped = false;
             Thread sendDataRequestsThread = new Thread(this.sendDataRequests);
+            Thread fillBufferThread = new Thread(this.fillBuffer);
             sendDataRequestsThread.Name = "sendDataRequestsThread";
             sendDataRequestsThread.Start();
-            Thread fillBufferThread = new Thread(this.fillBuffer);
-            fillBufferThread.Name = "fillBufferThread";
             fillBufferThread.Start();
             this.threadsList.Add(sendDataRequestsThread);
             this.threadsList.Add(fillBufferThread);
@@ -133,7 +128,7 @@ namespace FlightSimulatorApp.Model {
             this.client.send(str);
         }
 
-        public void setParameterValue(FG_OutputProperties param, double value) {
+        public void setParameterValue(setProperties param, double value) {
             this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
         }
 
@@ -159,14 +154,14 @@ namespace FlightSimulatorApp.Model {
                     continue;
                 }
             }
+
             this.client.flush();
             this.buffer = string.Empty;
         }
 
         private void sendDataRequests() {
             while (!this.stopped) {
-                foreach (KeyValuePair<FG_InputProperties, string> item in this.getParamPath)
-                {
+                foreach (KeyValuePair<getProperties, string> item in this.getParamPath) {
                     this.send("get " + item.Value + " \r\n");
                     Thread.Sleep(250);
                 }
@@ -179,7 +174,7 @@ namespace FlightSimulatorApp.Model {
             while (!gotData) {
                 if (this.buffer.Contains(Delimiter)) {
                     int index = this.buffer.IndexOf(Delimiter);
-                    string line = this.buffer.Substring(0, index + Delimiter.Length + 1);
+                    string line = this.buffer.Substring(0, index + Delimiter.Length);
                     this.buffer = this.buffer.Replace(line, "");
                     dataVector = this.parseData(line);
                     if (dataVector != null) {
@@ -187,12 +182,14 @@ namespace FlightSimulatorApp.Model {
                     }
                 }
             }
+
             return dataVector;
         }
-        private IList<String> parseData(string line) {
+
+        private IList<string> parseData(string line) {
             IList<string> dataVector = new List<string>(3);
             string[] lineArr = line.Split(" ".ToCharArray());
-            foreach (string str in lineArr) {// "path" = 'value' (casting)\r\n/>
+            foreach (string str in lineArr) { // "path" = 'value' (casting)\r\n/>
                 if (this.getParamPath.ContainsValue(str)) {
                     dataVector.Add(this.getParamPath[str].ToString());
                     continue;
@@ -204,22 +201,26 @@ namespace FlightSimulatorApp.Model {
                     continue;
                 }
             }
+
             if (dataVector.Count != 3) {
                 dataVector = null;
             }
+
             return dataVector;
         }
 
-        private static string trimData(string word, string charsToTrim, bool trimSpaces=false) {
+        private static string trimData(string word, string charsToTrim, bool trimSpaces = false) {
             StringBuilder stringBuilder = new StringBuilder();
             if (trimSpaces) {
                 charsToTrim = charsToTrim + " ";
             }
+
             foreach (char c in word) {
                 if (!charsToTrim.Contains(c)) {
                     stringBuilder.Append(c);
                 }
             }
+
             return stringBuilder.ToString();
         }
     }

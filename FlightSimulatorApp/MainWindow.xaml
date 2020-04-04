@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:FlightSimulatorApp"
         xmlns:external="clr-namespace:FlightSimulatorApp.Controls"
         mc:Ignorable="PresentationOptions"
-        Title="MainWindow" Height="500" Width="900" Background="Gray"
-        LostKeyboardFocus="Window_LostKeyboardFocus" KeyDown="MainWindow_OnKeyDown" SizeToContent="Width">
+        Title="FlightGear Controller" Height="600" Width="900" Background="Gray"
+        LostKeyboardFocus="Window_LostKeyboardFocus" KeyDown="MainWindow_OnKeyDown" SizeToContent="Width" Closed="Window_Closed" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
@@ -26,9 +26,9 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-        <external:BingMap x:Name="BingMap" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" />
-        <external:ControlsDisplay x:Name="ControlsDisplay" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" />
-        <external:ConnectionControl x:Name="ConnectionControl" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1"/>
-        <external:MyJoystick x:Name="Joystick" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="4"/>
+        <external:BingMap x:Name="BingMap" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" Margin="5"/>
+        <external:ControlsDisplay x:Name="ControlsDisplay" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Margin="5" />
+        <external:ConnectionControl x:Name="ConnectionControl" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" Margin="5"/>
+        <external:MyJoystick x:Name="Joystick" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="4" Margin="5"/>
     </Grid>
 </Window>

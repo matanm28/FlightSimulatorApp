@@ -24,7 +24,6 @@ namespace FlightSimulatorApp {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private FlightGearViewModel vm;
         private JoystickViewModel joystickVM;
         private DashboardViewModel dashboardVM;
         private MapViewModel mapVM;
@@ -47,12 +46,18 @@ namespace FlightSimulatorApp {
 
         }
 
-        private void intializeOldViewModel() {
-            this.vm = new FlightGearViewModel(new Model.FlightSimulatorModel());
-            this.DataContext = this.vm;
-            this.ConnectionControl.onConnectEvent += this.vm.Start;
-            this.ConnectionControl.onDisconnectEvent += this.vm.Stop;
+        private void initializeNewViewModel(IFlightSimulatorModel model) {
+            this.joystickVM = new JoystickViewModel(model);
+            this.dashboardVM = new DashboardViewModel(model);
+            this.mapVM = new MapViewModel(model);
+            this.BingMap.DataContext = this.mapVM;
+            this.Joystick.DataContext = this.joystickVM;
+            this.ControlsDisplay.DataContext = this.dashboardVM;
+            this.ConnectionControl.onConnectEvent += this.dashboardVM.Start;
+            this.ConnectionControl.onDisconnectEvent += this.dashboardVM.Stop;
+
         }
+
 
         /// <summary>Handles the LostKeyboardFocus event of the Window control.</summary>
         /// <param name="sender">The source of the event.</param>
@@ -68,6 +73,10 @@ namespace FlightSimulatorApp {
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
             this.Joystick.keyboardPressed(sender, e);
+        }
+
+        private void Window_Closed(object sender, EventArgs e) {
+            this.joystickVM.Stop();
         }
     }
 }

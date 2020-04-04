@@ -32,8 +32,8 @@
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="HorizontalAlignment" Value="Center" />
                     <Setter Property="Margin" Value="0 0 0 5" />
-                    <Setter Property="MinWidth" Value="100" />
-                    <Setter Property="MaxWidth" Value="160" />
+                    <Setter Property="MinWidth" Value="110" />
+                    <Setter Property="MaxWidth" Value="120" />
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>
@@ -61,13 +61,12 @@
             <Button x:Name="ConnectButton" Content="Connect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                     Click="ConnectButton_Click" />
             <Button x:Name="DisconnectButton" Content="Disconnect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-                    IsEnabled="False" Visibility="Collapsed"
-                    Click="DisconnectButton_Click" />
+                    IsEnabled="False" Visibility="Collapsed" Click="DisconnectButton_Click" />
             <TextBlock x:Name="StatusTextBlock" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center"
-                       HorizontalAlignment="Center" Visibility="Hidden" FontSize="14" />
+                       HorizontalAlignment="Center" Visibility="Hidden" FontSize="12" />
             <TextBlock x:Name="ErrorTextBlock" Grid.Row="5" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2"
                        TextAlignment="Center"
-                       HorizontalAlignment="Center" Visibility="Collapsed" FontSize="14" />
+                       HorizontalAlignment="Center" Visibility="Collapsed" FontSize="12" />
         </Grid>
     </Viewbox>
 </UserControl>

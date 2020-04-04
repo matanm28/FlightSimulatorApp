@@ -34,11 +34,9 @@ namespace FlightSimulatorApp.Controls {
         public event DisconnectEvent onDisconnectEvent;
 
         private const float Second = 1000;
-        private const string disconnected = "Disconnected";
-        private const string waiting = "Waiting for connection";
-        private const string connected = "Connected to Simulator";
+        private const string disconnected = "Simulator Disconnected";
+        private const string connected = "Simulator Connected";
         private string displayText = disconnected;
-        private string errorText = string.Empty;
         private Timer timer = new Timer();
         private bool toggleLight = true;
         private bool error = false;
@@ -56,7 +54,11 @@ namespace FlightSimulatorApp.Controls {
         }
 
         private void timer_Tick(object sender, EventArgs e) {
-            Dispatcher.Invoke(this.animation);
+            try {
+                Dispatcher.Invoke(this.animation);
+            } catch(Exception exception) {
+                Console.WriteLine(e);
+            }
         }
 
         private void animation() {

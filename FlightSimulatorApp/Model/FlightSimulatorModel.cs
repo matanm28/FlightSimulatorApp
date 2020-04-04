@@ -9,6 +9,8 @@ using Microsoft.Maps.MapControl.WPF;
 namespace FlightSimulatorApp.Model {
     using System.Collections;
     using System.ComponentModel;
+    using System.IO;
+    using System.Net.Sockets;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Windows;
@@ -16,8 +18,6 @@ namespace FlightSimulatorApp.Model {
     using FlightGearOutput = FlightGearTCPHandler.FG_OutputProperties;
 
     public class FlightSimulatorModel : IFlightSimulatorModel {
-        
-        private FlightGearTCPHandler tcpHandler;
         private const double TOLERANCE = 0.0001;
         private const double MIN_LATITUDE = -90.0;
         private const double MAX_LATITUDE = 90.0;
@@ -39,11 +39,19 @@ namespace FlightSimulatorApp.Model {
         private double longitude;
         private double latitude;
         private string errorBoundaries;
+        private bool latitudeError;
+        private bool longitudeError;
+
+        private ITCPHandler tcpHandler;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
+        }
 
+        public FlightSimulatorModel(ITCPHandler tcpHandler) {
+            this.tcpHandler = tcpHandler;
         }
 
         /// <summary>Connects the specified ip.</summary>
@@ -89,55 +97,67 @@ namespace FlightSimulatorApp.Model {
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.Heading = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.VerticalSpeed:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.VerticalSpeed = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.GroundSpeed:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.GroundSpeed = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.AirSpeed:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.AirSpeed = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.GpsAltitude:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.GpsAltitude = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.InternalRoll:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.InternalRoll = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.InternalPitch:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.InternalPitch = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.AltimeterAltitude:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.AltimeterAltitude = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.Longitude:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.Longitude = double.Parse(dataVector[1]);
                             }
+
                             break;
                         case FlightGearInput.Latitude:
                             if (dataVector[2].Equals("double", StringComparison.CurrentCultureIgnoreCase)) {
                                 this.Latitude = double.Parse(dataVector[1]);
                             }
+
                             break;
                         default:
                             break;
                     }
+                } catch (IOException e) {
+                    this.Disconnect();
                 } catch (Exception e) {
                     Console.WriteLine(e);
                     continue;
@@ -146,7 +166,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         private static FlightGearInput stringToEnum(string property) {
-            FlightGearInput enumProperty = (FlightGearInput) Enum.Parse(typeof(FlightGearInput), property, true);
+            FlightGearInput enumProperty = (FlightGearInput)Enum.Parse(typeof(FlightGearInput), property, true);
             return enumProperty;
         }
 
@@ -154,6 +174,23 @@ namespace FlightSimulatorApp.Model {
             if (this.PropertyChanged != null) {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
+        }
+
+        private void NotifyError() {
+            string error = string.Empty;
+            if (this.latitudeError) {
+                error = "latitude is out of boundaries";
+            }
+
+            if (this.longitudeError) {
+                if (error.Length != 0) {
+                    error = "latitude and longitude are out of boundaries";
+                } else {
+                    error = "longitude is out of boundaries";
+                }
+            }
+
+            this.ErrorBoundaries = error;
         }
 
         public bool Running {
@@ -236,17 +273,22 @@ namespace FlightSimulatorApp.Model {
 
             set {
                 if (Math.Abs(this.longitude - value) > TOLERANCE) {
-                    if(value <= MAX_LONGITUDE && value >= MIN_LONGITUDE)
-                    {
+                    if (value <= MAX_LONGITUDE && value >= MIN_LONGITUDE) {
                         this.longitude = value;
-                        this.NotifyPropertyChanged("Longitude");
-                    }
-                    else
-                    {
-                        this.ErrorBoundaries = "out of boundaries";
-                        this.NotifyPropertyChanged("ErrorBoundaries");
+                        this.ErrorBoundaries = string.Empty;
+                        this.longitudeError = false;
+                    } else {
+                        this.longitudeError = true;
+                        if (value < MIN_LONGITUDE) {
+                            this.longitude = MIN_LONGITUDE;
+                        } else {
+                            this.longitude = MAX_LONGITUDE;
+                        }
                     }
                 }
+
+                this.NotifyPropertyChanged("Longitude");
+                this.NotifyError();
             }
         }
 
@@ -255,33 +297,34 @@ namespace FlightSimulatorApp.Model {
 
             set {
                 if (Math.Abs(this.latitude - value) > TOLERANCE) {
-                    if (value <= MAX_LATITUDE && value >= MIN_LATITUDE)
-                    {
+                    if (value <= MAX_LATITUDE && value >= MIN_LATITUDE) {
                         this.latitude = value;
-                        this.ErrorBoundaries = "";
-                    }
-                    else
-                    {
-                        if (value <= MAX_LATITUDE)
-                        {
+                        this.ErrorBoundaries = string.Empty;
+                        this.latitudeError = false;
+                    } else {
+                        this.latitudeError = true;
+                        if (value < MIN_LATITUDE) {
                             this.latitude = MIN_LATITUDE;
-                        }
-                        else
-                        {
+                        } else {
                             this.latitude = MAX_LATITUDE;
                         }
-                        this.ErrorBoundaries = "out of boundaries";
                     }
                 }
+
                 this.NotifyPropertyChanged("Latitude");
-                this.NotifyPropertyChanged("ErrorBoundaries");
+                this.NotifyError();
             }
         }
 
         public string ErrorBoundaries {
             get => this.errorBoundaries;
 
-            set { this.errorBoundaries = value; }
+            set {
+                if (this.errorBoundaries != value) {
+                    this.errorBoundaries = value;
+                    this.NotifyPropertyChanged("ErrorBoundaries");
+                }
+            }
         }
 
         public double Throttle {
@@ -290,7 +333,7 @@ namespace FlightSimulatorApp.Model {
             set {
                 if (Math.Abs(this.throttle - value) > TOLERANCE) {
                     this.throttle = value;
-                    this.tcpHandler.setParameterValue(FlightGearOutput.Throttle,value);
+                    this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, value);
                 }
             }
         }
