@@ -16,6 +16,7 @@ namespace FlightSimulatorApp.Model {
     using System.Windows;
     using FlightGearInput = FlightGearTCPHandler.FG_InputProperties;
     using FlightGearOutput = FlightGearTCPHandler.FG_OutputProperties;
+    using Status = Controls.ConnectionControl.Status;
 
     public class FlightSimulatorModel : IFlightSimulatorModel {
         private const double TOLERANCE = 0.0001;
@@ -41,6 +42,9 @@ namespace FlightSimulatorApp.Model {
         private string errorBoundaries;
         private bool latitudeError;
         private bool longitudeError;
+        private string ipAddress;
+        private int port;
+        private Status connectionStatus = Status.inActive;
 
         private ITCPHandler tcpHandler;
 
@@ -48,6 +52,9 @@ namespace FlightSimulatorApp.Model {
 
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
+            this.tcpHandler.DisconnectOccured += delegate(string error) {
+                this.ConnectionStatus = Status.disconnect;
+            };
         }
 
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
@@ -58,33 +65,48 @@ namespace FlightSimulatorApp.Model {
         /// <param name="ip">The ip.</param>
         /// <param name="port">The port.</param>
         /// <exception cref="TimeoutException">if model wasn't able to connect</exception>
-        public void Connect(string ip, int port) {
+        public bool Connect(string ip, int port) {
             try {
                 this.tcpHandler.connect(ip, port);
                 this.resendSetValues();
+                return true;
             } catch (TimeoutException timeoutException) {
-                throw timeoutException;
+                return false;
             }
         }
 
         private void resendSetValues() {
-            this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, this.Throttle);
-            this.tcpHandler.setParameterValue(FlightGearOutput.Rudder, this.Rudder);
-            this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, this.Aileron);
-            this.tcpHandler.setParameterValue(FlightGearOutput.Elevator, this.Elevator);
+            
+                this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, this.Throttle);
+                this.tcpHandler.setParameterValue(FlightGearOutput.Rudder, this.Rudder);
+                this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, this.Aileron);
+                this.tcpHandler.setParameterValue(FlightGearOutput.Elevator, this.Elevator);
+            
+        }
+        
+        public async void Disconnect() {
+            if (this.connectionStatus != Status.inActive) {
+                this.running = false;
+                await Task.Run(()=>this.tcpHandler.disconnect());
+                this.ConnectionStatus = Status.inActive;
+            }
         }
 
-        public void Disconnect() {
-            this.running = false;
-            this.tcpHandler.disconnect();
-        }
-
-        public void Start() {
-            this.running = true;
-            this.tcpHandler.start();
-            Thread runThread = new Thread(this.run);
-            runThread.Name = "runThread";
-            runThread.Start();
+        public async void Start() {
+            bool flag = false;
+            if (!this.tcpHandler.IsConnected) {
+               flag = await Task<bool>.Run(() => this.Connect(this.IpAddress,this.Port));
+            }
+            if (flag) {
+                this.running = true;
+                await Task.Run(() => this.tcpHandler.start());
+                Thread runThread = new Thread(this.run);
+                runThread.Name = "runThread";
+                runThread.Start();
+                this.ConnectionStatus = Status.active;
+            } else {
+                this.ConnectionStatus = Status.inActive;
+            }
         }
 
         private void run() {
@@ -366,6 +388,40 @@ namespace FlightSimulatorApp.Model {
                     this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, value);
                 }
             }
+        }
+
+        public Status ConnectionStatus {
+            get => this.connectionStatus;
+            set {
+                if (this.connectionStatus != value) {
+                    this.connectionStatus = value;
+                    switch (value) {
+                        case Status.connect:
+                            this.Start();
+                            break;
+                        case Status.disconnect:
+                            this.Disconnect();
+                            break;
+                    }
+                    this.NotifyPropertyChanged("ConnectionStatus");
+                }
+            }
+        }
+
+        public string IpAddress {
+            get => this.ipAddress;
+            set { 
+                this.ipAddress = value;
+                NotifyPropertyChanged("IpAddress");
+            }
+        }
+        public int Port {
+            get => this.port;
+            set {
+                this.port = value;
+                NotifyPropertyChanged("Port");
+            }
+
         }
     }
 }

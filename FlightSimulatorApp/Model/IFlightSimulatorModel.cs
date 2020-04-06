@@ -7,9 +7,10 @@ using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.Model {
     using System.ComponentModel;
+    using Status = Controls.ConnectionControl.Status;
 
     public interface IFlightSimulatorModel : INotifyPropertyChanged {
-        void Connect(string ip, int port);
+        bool Connect(string ip, int port);
 
         void Disconnect();
 
@@ -41,5 +42,11 @@ namespace FlightSimulatorApp.Model {
         double Aileron { get; set; }
 
         string ErrorBoundaries { get; set; }
+
+        Status ConnectionStatus { get; set; }
+
+        string IpAddress { get; set; }
+
+        int Port { get; set; }
     }
 }

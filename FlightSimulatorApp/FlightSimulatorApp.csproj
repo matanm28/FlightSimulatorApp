@@ -76,6 +76,7 @@
     <Compile Include="Model\TelnetClientV2.cs" />
     <Compile Include="Utilities\BiDictionary.cs" />
     <Compile Include="Utilities\TimeOutTimer.cs" />
+    <Compile Include="ViewModel\ConnectionControlViewModel.cs" />
     <Compile Include="ViewModel\DashboardViewModel.cs" />
     <Compile Include="ViewModel\FlightGearViewModel.cs" />
     <Compile Include="ViewModel\AFlightGearViewModel.cs" />

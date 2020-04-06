@@ -31,12 +31,13 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void disconnect() {
-            this.client.Close();
+            if (this.client.Connected) {
+                this.client.Close();
+            }
             this.client = new TcpClient(AddressFamily.InterNetwork);
         }
 
         public void send(string data) {
-            //todo wrap try catch and disconnect
             try {
                 if (this.isConnected()) {
                     NetworkStream networkStream = this.client.GetStream();

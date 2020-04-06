@@ -15,7 +15,7 @@ namespace FlightSimulatorApp.ViewModel {
     public class FlightGearViewModel : INotifyPropertyChanged {
         private IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
-        private modelStatus running = modelStatus.disconnected;
+        private modelStatus running = modelStatus.inActive;
         private Location location;
 
         // Properties

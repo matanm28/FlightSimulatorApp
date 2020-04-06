@@ -19,6 +19,10 @@ namespace FlightSimulatorApp.Model {
         private ITelnetClient client;
         private volatile bool stopped;
         private const string Delimiter = "\n";
+        public event OnDisconnectEventHandler DisconnectOccured;
+        public bool IsConnected {
+            get { return this.client.isConnected(); }
+        }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public DummyServerTCPHandler(ITelnetClient client) {
