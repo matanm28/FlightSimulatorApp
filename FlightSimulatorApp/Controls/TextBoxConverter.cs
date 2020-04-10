@@ -23,8 +23,7 @@ namespace FlightSimulatorApp.Controls {
                 if (tempValue == (int)tempValue) {
                     return tempValue.ToString() + ".000";
                 }
-                string data = tempValue.ToString();
-                data = data.Substring(0, data.IndexOf('.') + 4);
+                string data = tempValue.ToString("####.#####");
                 return data;
             } catch (InvalidCastException e) {
                 return "Casting error";

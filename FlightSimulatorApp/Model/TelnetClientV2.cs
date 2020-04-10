@@ -12,10 +12,10 @@ namespace FlightSimulatorApp.Model {
 
     class TelnetClientV2 : ITelnetClient {
         /// <summary>The size</summary>
-        private const short Size = 512;
+        protected const short Size = 512;
 
         /// <summary>The client</summary>
-        private TcpClient client;
+        protected TcpClient client;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public TelnetClientV2() {
@@ -52,7 +52,8 @@ namespace FlightSimulatorApp.Model {
         public void flush() {
             this.client.GetStream().Flush();
         }
-        public string read() {
+        //todo: change after ex1
+        public virtual string read() {
             string dataToSend = string.Empty;
             if (this.isConnected()) {
                 NetworkStream ns = this.client.GetStream();

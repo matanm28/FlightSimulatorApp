@@ -25,14 +25,6 @@ namespace FlightSimulatorApp.Controls {
     public partial class ConnectionControl : UserControl {
         public enum Status { active, connect, disconnect, inActive }
 
-        public delegate void ConnectEvent(string address, int port);
-
-        public event ConnectEvent onConnectEvent;
-
-        public delegate void DisconnectEvent();
-
-        public event DisconnectEvent onDisconnectEvent;
-
         private const float Second = 1000;
         private const string disconnected = "Simulator Disconnected";
         private const string connected = "Simulator Connected";
@@ -52,9 +44,7 @@ namespace FlightSimulatorApp.Controls {
 
         public Status ConnectionStatus {
             get { return (Status)GetValue(ConnectionStatusProperty); }
-            set {
-                SetValue(ConnectionStatusProperty, value);
-            }
+            set { SetValue(ConnectionStatusProperty, value); }
         }
 
         static void OnConnectionStatusPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e) {
@@ -63,33 +53,31 @@ namespace FlightSimulatorApp.Controls {
 
         private void OnConnectionStatusPropertyChanged(DependencyPropertyChangedEventArgs e) {
             Status value = (Status)e.NewValue;
-            if (this.connectionStatus != value) {
-                this.timer.Stop();
-                switch (value) {
-                    case Status.active:
-                        this.startDisplayText(connected, true);
-                        this.changeButtonsDisplay(Status.active);
-                        this.AddressTextBox.IsEnabled = false;
-                        this.PortTextBox.IsEnabled = false;
-                        break;
-                    case Status.inActive:
-                        this.ErrorTextBlock.Text = string.Empty;
-                        this.ErrorTextBlock.Visibility = Visibility.Collapsed;
-                        this.startDisplayText(disconnected, false);
-                        this.changeButtonsDisplay(Status.inActive);
-                        this.AddressTextBox.IsEnabled = true;
-                        this.PortTextBox.IsEnabled = true;
-                        break;
-                    case Status.disconnect:
-                    case Status.connect:
-                        this.StatusTextBlock.Text = "Waiting to simulator response";
-                        this.StatusTextBlock.Foreground = Brushes.Black;
-                        this.StatusTextBlock.Visibility = Visibility.Visible;
-                        break;
-                }
-                
-                this.connectionStatus = value;
+            this.timer.Stop();
+            switch (value) {
+                case Status.active:
+                    this.startDisplayText(connected, true);
+                    this.changeButtonsDisplay(Status.active);
+                    this.AddressTextBox.IsEnabled = false;
+                    this.PortTextBox.IsEnabled = false;
+                    break;
+                case Status.inActive:
+                    this.ErrorTextBlock.Text = string.Empty;
+                    this.ErrorTextBlock.Visibility = Visibility.Collapsed;
+                    this.startDisplayText(disconnected, false);
+                    this.changeButtonsDisplay(Status.inActive);
+                    this.AddressTextBox.IsEnabled = true;
+                    this.PortTextBox.IsEnabled = true;
+                    break;
+                case Status.disconnect:
+                case Status.connect:
+                    this.StatusTextBlock.Text = "Waiting to simulator response";
+                    this.StatusTextBlock.Foreground = Brushes.Black;
+                    this.StatusTextBlock.Visibility = Visibility.Visible;
+                    break;
             }
+
+            this.connectionStatus = value;
         }
 
         public static readonly DependencyProperty IpAddressProperty = DependencyProperty.Register(
@@ -116,8 +104,6 @@ namespace FlightSimulatorApp.Controls {
 
         public ConnectionControl() {
             InitializeComponent();
-            this.ipAddress = this.AddressTextBox.Text;
-            this.port = int.Parse(this.PortTextBox.Text);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
@@ -161,41 +147,29 @@ namespace FlightSimulatorApp.Controls {
         private void ConnectButton_Click(object sender, RoutedEventArgs e) {
             this.timer.Stop();
             this.ErrorTextBlock.Visibility = Visibility.Collapsed;
-            if (onConnectEvent != null) {
-                try {
-                    string ip = this.AddressTextBox.Text;
-                    int port = int.Parse(this.PortTextBox.Text);
-                    if (validatePort(port) && validateIP(ip)) {
-                        this.IpAddress = ip;
-                        this.Port = port;
-
-                        // onConnectEvent(ip, port);
-                        this.ConnectionStatus = Status.connect;
-
-                        // this.startDisplayText(connected, true);
-                        // this.changeButtonsDisplay(Status.active);
-                    } else if (!validatePort(port)) {
-                        this.ipAddress = ip;
-                        this.startDisplayText(disconnected, false, "Invalid Port!");
-                    } else {
-                        this.port = port;
-                        this.startDisplayText(disconnected, false, "Invalid IP");
-                    }
-                } catch (Exception exception) {
-                    this.startDisplayText(disconnected, false, exception.Message);
+            try {
+                string ip = this.AddressTextBox.Text;
+                int port = int.Parse(this.PortTextBox.Text);
+                if (validatePort(port) && validateIP(ip)) {
+                    this.IpAddress = ip;
+                    this.Port = port;
+                    this.ConnectionStatus = Status.connect;
+                } else if (!validatePort(port) && !validateIP(ip)) {
+                    this.startDisplayText(disconnected, false, "Invalid Port & IP!");
+                } else if (!validatePort(port)) {
+                    this.ipAddress = ip;
+                    this.startDisplayText(disconnected, false, "Invalid Port!");
+                } else {
+                    this.port = port;
+                    this.startDisplayText(disconnected, false, "Invalid IP!");
                 }
+            } catch (Exception exception) {
+                this.startDisplayText(disconnected, false, exception.Message);
             }
         }
 
         private void DisconnectButton_Click(object sender, RoutedEventArgs e) {
-            if (onDisconnectEvent != null) {
-                this.timer.Stop();
-                onDisconnectEvent();
-                this.ErrorTextBlock.Text = string.Empty;
-                this.ErrorTextBlock.Visibility = Visibility.Collapsed;
-                this.startDisplayText(disconnected, false);
-                this.changeButtonsDisplay(Status.inActive);
-            }
+            this.ConnectionStatus = Status.disconnect;
         }
 
         private void changeButtonsDisplay(Status connectionStatus) {

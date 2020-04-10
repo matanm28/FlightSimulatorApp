@@ -12,13 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Configuration;
 
 namespace FlightSimulatorApp {
     using System.ComponentModel;
+    using System.Configuration;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using FlightSimulatorApp.Model;
     using FlightSimulatorApp.ViewModel;
+    
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,9 +32,13 @@ namespace FlightSimulatorApp {
         private MapViewModel mapVM;
         private ConnectionControlViewModel connectionControlVM;
         private bool connected = false;
+
+        [Obsolete]
         public MainWindow() {
             InitializeComponent();
-            this.initializeNewViewModel();
+            this.ConnectionControl.AddressTextBox.Text = ConfigurationSettings.AppSettings["ip"].ToString();
+            this.ConnectionControl.PortTextBox.Text = ConfigurationSettings.AppSettings["port"].ToString();
+            this.initializeNewViewModel(new FlightSimulatorModel(new DummyServerTCPHandler()));
             this.bindData();
         }
 
@@ -44,9 +51,6 @@ namespace FlightSimulatorApp {
             this.BingMap.DataContext = this.mapVM;
             this.Joystick.DataContext = this.joystickVM;
             this.ControlsDisplay.DataContext = this.dashboardVM;
-            this.ConnectionControl.onConnectEvent += this.dashboardVM.Start;
-            this.ConnectionControl.onDisconnectEvent += this.dashboardVM.Stop;
-
         }
 
         private void bindData() {
@@ -80,12 +84,10 @@ namespace FlightSimulatorApp {
             this.joystickVM = new JoystickViewModel(model);
             this.dashboardVM = new DashboardViewModel(model);
             this.mapVM = new MapViewModel(model);
+            this.connectionControlVM = new ConnectionControlViewModel(model);
             this.BingMap.DataContext = this.mapVM;
             this.Joystick.DataContext = this.joystickVM;
             this.ControlsDisplay.DataContext = this.dashboardVM;
-            this.ConnectionControl.onConnectEvent += this.dashboardVM.Start;
-            this.ConnectionControl.onDisconnectEvent += this.dashboardVM.Stop;
-
         }
 
 

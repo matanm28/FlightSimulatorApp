@@ -124,6 +124,7 @@ namespace FlightSimulatorApp.Model {
 
             this.client.disconnect();
             this.threadsList = new List<Thread>();
+            this.buffer = string.Empty;
         }
 
         public void start() {
@@ -188,8 +189,8 @@ namespace FlightSimulatorApp.Model {
             while (!this.stopped) {
                 foreach (KeyValuePair<FG_InputProperties, string> item in this.getParamPath) {
                     this.send("get " + item.Value + " \r\n");
-                    Thread.Sleep(250);
                 }
+                Thread.Sleep(250);
             }
         }
 

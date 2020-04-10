@@ -6,20 +6,26 @@ using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
     using System.Net.Sockets;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using FlightSimulatorApp.Utilities;
     using getProperties = FlightGearTCPHandler.FG_InputProperties;
     using setProperties = FlightGearTCPHandler.FG_OutputProperties;
 
     public class DummyServerTCPHandler : ITCPHandler {
+        private const string Delimiter = "\r\n/>";
         private BiDictionary<getProperties, string> getParamPath;
         private Dictionary<setProperties, string> setParamPath;
         private IList<Thread> threadsList;
         private string buffer = string.Empty;
+        private Queue<string> parsingQueue;
         private ITelnetClient client;
         private volatile bool stopped;
-        private const string Delimiter = "\n";
+        private Mutex locker = new Mutex();
+        private int counter = 0;
+
         public event OnDisconnectEventHandler DisconnectOccured;
+
         public bool IsConnected {
             get { return this.client.isConnected(); }
         }
@@ -28,12 +34,13 @@ namespace FlightSimulatorApp.Model {
         public DummyServerTCPHandler(ITelnetClient client) {
             this.client = client;
             this.threadsList = new List<Thread>();
+            this.parsingQueue = new Queue<string>();
             this.initializeParametersMap();
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public DummyServerTCPHandler()
-            : this(new TelnetClientV2()) {
+            : this(new DummyTelnetClient()) {
         }
 
         private void initializeParametersMap() {
@@ -108,19 +115,23 @@ namespace FlightSimulatorApp.Model {
             while (this.threadsLive()) {
                 Thread.Sleep(1000);
             }
-
             this.client.disconnect();
             this.threadsList = new List<Thread>();
+            this.buffer = string.Empty;
+            this.parsingQueue.Clear();
         }
 
         public void start() {
             this.stopped = false;
             Thread sendDataRequestsThread = new Thread(this.sendDataRequests);
+
             Thread fillBufferThread = new Thread(this.fillBuffer);
             sendDataRequestsThread.Name = "sendDataRequestsThread";
             sendDataRequestsThread.Start();
+
             fillBufferThread.Start();
             this.threadsList.Add(sendDataRequestsThread);
+
             this.threadsList.Add(fillBufferThread);
         }
 
@@ -129,11 +140,35 @@ namespace FlightSimulatorApp.Model {
         }
 
         private void send(string str) {
-            this.client.send(str);
+            try {
+                this.client.send(str);
+            } catch (Exception exception) {
+                this.DisconnectOccured?.Invoke(exception.Message);
+            }
         }
 
+        //public async void setParameterValue(setProperties param, double value) {
+        //    Task task1 = new Task(() => this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n"));
+        //    Task<string> task2 = new Task<string>(
+        //        () => (this.setParamPath[param] + " '" + this.client.read().Replace('\n', '\'') + " \r\n/>"));
+        //    task1.RunSynchronously();
+        //    await task1;
+        //    task2.RunSynchronously();
+        //    string answer = await task2;
+        //    if (task1.IsFaulted || task2.IsFaulted) {
+        //        return;
+        //    }
+
+        //    this.buffer += answer;
+        //}
+
         public void setParameterValue(setProperties param, double value) {
-            this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
+            try {
+                this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
+                this.buffer += (this.setParamPath[param] + " '" + this.client.read().Replace('\n', '\'') + " \r\n/>");
+            } catch (Exception e) {
+                DisconnectOccured?.Invoke(e.ToString());
+            }
         }
 
         private bool threadsLive() {
@@ -149,26 +184,34 @@ namespace FlightSimulatorApp.Model {
         private void fillBuffer() {
             while (!this.stopped) {
                 try {
-                    this.buffer += this.client.read();
-                    if (this.buffer.Length > 10000) {
-                        Thread.Sleep(1000);
+                    if (this.buffer.Contains(Delimiter)) {
+                        int index = this.buffer.IndexOf(Delimiter);
+                        string line = this.buffer.Substring(0, index + Delimiter.Length);
+                        this.buffer = this.buffer.Replace(line, string.Empty);
+                        this.parsingQueue.Enqueue(line);
+                    }
+                    if (this.parsingQueue.Count > 100) {
+                        Thread.Sleep(1000 * 2);
                     }
                 } catch (Exception e) {
                     Console.WriteLine(e);
                     continue;
                 }
             }
-
-            this.client.flush();
-            this.buffer = string.Empty;
         }
 
         private void sendDataRequests() {
             while (!this.stopped) {
                 foreach (KeyValuePair<getProperties, string> item in this.getParamPath) {
-                    this.send("get " + item.Value + " \r\n");
-                    Thread.Sleep(250);
+                    try {
+                        this.send("get " + item.Value + " \r\n");
+                        this.buffer += item.Value + " = '" + this.client.read().Replace('\n', '\'') + " (double) \r\n/>";
+                    } catch (Exception e) {
+                        DisconnectOccured?.Invoke(e.ToString());
+                    }
+                    
                 }
+                Thread.Sleep(500);
             }
         }
 
@@ -176,13 +219,17 @@ namespace FlightSimulatorApp.Model {
             IList<string> dataVector = null;
             bool gotData = false;
             while (!gotData) {
-                if (this.buffer.Contains(Delimiter)) {
-                    int index = this.buffer.IndexOf(Delimiter);
-                    string line = this.buffer.Substring(0, index + Delimiter.Length);
-                    this.buffer = this.buffer.Replace(line, "");
+                if (this.parsingQueue.Count>0) {
+                    string line = this.parsingQueue.Dequeue();
                     dataVector = this.parseData(line);
                     if (dataVector != null) {
                         gotData = true;
+                    } else if (this.counter > 10) {
+                        this.counter = 0;
+                        this.buffer = string.Empty;
+                        Thread.Sleep(50);
+                    } else {
+                        this.counter++;
                     }
                 }
             }

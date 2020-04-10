@@ -59,6 +59,9 @@ namespace FlightSimulatorApp.Model {
 
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
             this.tcpHandler = tcpHandler;
+            this.tcpHandler.DisconnectOccured += delegate (string error) {
+                this.ConnectionStatus = Status.disconnect;
+            };
         }
 
         /// <summary>Connects the specified ip.</summary>

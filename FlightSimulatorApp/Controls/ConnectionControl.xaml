@@ -53,10 +53,9 @@
                 <ColumnDefinition Width="5" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="IP Address: " Grid.Row="1" Grid.Column="1" />
-            <TextBox x:Name="AddressTextBox" Text="127.0.0.1" Grid.Row="1" Grid.Column="2"
-                     TextChanged="AddressTextBox_TextChanged" />
+            <TextBox x:Name="AddressTextBox" Text="127.0.0.1" Grid.Row="1" Grid.Column="2" TextChanged="AddressTextBox_TextChanged"/>
             <TextBlock Text="Port: " Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" />
-            <TextBox x:Name="PortTextBox" Text="5402" Grid.Row="2" Grid.Column="2"
+            <TextBox x:Name="PortTextBox" Grid.Row="2" Grid.Column="2"
                      TextChanged="PortTextBox_TextChanged" />
             <Button x:Name="ConnectButton" Content="Connect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                     Click="ConnectButton_Click" />
