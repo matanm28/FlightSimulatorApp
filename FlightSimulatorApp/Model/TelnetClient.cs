@@ -27,7 +27,7 @@ namespace FlightSimulatorApp.Model {
         /// <summary>Connects the specified IP.</summary>
         /// <param name="ip">The IP.</param>
         /// <param name="port">The port.</param>
-        public void connect(string ip, int port) {
+        public void Connect(string ip, int port) {
             this.client = new TcpClient(AddressFamily.InterNetwork);
 
             this.buffer = string.Empty;
@@ -46,13 +46,13 @@ namespace FlightSimulatorApp.Model {
         }
 
         /// <summary>Disconnects this instance.</summary>
-        public void disconnect() {
+        public void Disconnect() {
             this.client.Close();
         }
 
         /// <summary>Sends the specified data.</summary>
         /// <param name="data">The data.</param>
-        public void send(string data) {
+        public void Send(string data) {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = Encoding.ASCII.GetBytes(data);
             ns.Write(dataBytes, 0, dataBytes.Length);
@@ -60,7 +60,7 @@ namespace FlightSimulatorApp.Model {
 
         /// <summary>Reads this instance.</summary>
         /// <returns>the entire buffer as string</returns>
-        public string read() {
+        public string Read() {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = new byte[Size];
             string dataToSend = string.Empty;
@@ -79,11 +79,11 @@ namespace FlightSimulatorApp.Model {
             return dataToSend;
         }
 
-        public bool isConnected() {
+        public bool IsConnected() {
             return this.client.Connected;
         }
 
-        public void flush() {
+        public void Flush() {
             this.client.GetStream().Flush();
         }
 

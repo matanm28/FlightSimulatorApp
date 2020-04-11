@@ -9,16 +9,16 @@ namespace FlightSimulatorApp.Model {
     using Microsoft.Win32;
 
     public interface ITelnetClient {
-        void connect(string ip, int port);
+        void Connect(string ip, int port);
 
-        bool isConnected();
+        bool IsConnected();
 
-        void disconnect();
+        void Disconnect();
 
-        void send(string data);
+        void Send(string data);
 
-        string read();
+        string Read();
 
-        void flush();
+        void Flush();
     }
 }

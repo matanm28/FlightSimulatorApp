@@ -12,9 +12,15 @@ namespace FlightSimulatorApp.ViewModel {
         protected IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AFlightGearViewModel"/> class.
+        /// </summary>
         public AFlightGearViewModel() {
 
         }
+
+        /// <summary>Initializes a new instance of the <see cref="AFlightGearViewModel" /> class.</summary>
+        /// <param name="model">The model.</param>
         public AFlightGearViewModel(IFlightSimulatorModel model) {
             this.model = model;
             model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
@@ -22,12 +28,19 @@ namespace FlightSimulatorApp.ViewModel {
             };
         }
 
+        /// <summary>Notifies the property changed.</summary>
+        /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName) {
             if (this.PropertyChanged != null) {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
 
+        /// <summary>
+        /// Start connecting.
+        /// </summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
         public void Start(string ip, int port) {
             if (!this.model.Running) {
                 try {
@@ -38,14 +51,20 @@ namespace FlightSimulatorApp.ViewModel {
                 }
             }
         }
-
+        /// <summary>
+        /// Stops the connection.
+        /// </summary>
         public void Stop() {
             if (this.model.Running) {
                 this.model.Disconnect();
             }
         }
 
-        public virtual void setModel(IFlightSimulatorModel model) {
+        /// <summary>
+        /// Sets the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public virtual void SetModel(IFlightSimulatorModel model) {
             this.model = model;
         }
 

@@ -12,7 +12,7 @@ namespace FlightSimulatorApp.ViewModel {
         public ConnectionControlViewModel(IFlightSimulatorModel model)
             : base(model) {
         }
-        
+        // Properties
         public Status VM_ConnectionStatus {
             get { return this.model.ConnectionStatus; }
             set { this.model.ConnectionStatus = value; }

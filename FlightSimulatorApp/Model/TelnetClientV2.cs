@@ -21,25 +21,40 @@ namespace FlightSimulatorApp.Model {
         public TelnetClientV2() {
             this.client = new TcpClient(AddressFamily.InterNetwork);
         }
-
-        public void connect(string ip, int port) {
+        /// <summary>
+        /// Connects the client.
+        /// </summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
+        public void Connect(string ip, int port) {
             this.client.Connect(IPAddress.Parse(ip), port);
         }
-
-        public bool isConnected() {
+        /// <summary>
+        /// Determines whether this instance is connected.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsConnected() {
             return this.client.Connected;
         }
-
-        public void disconnect() {
+        /// <summary>
+        /// Disconnects the client.
+        /// </summary>
+        public void Disconnect() {
             if (this.client.Connected) {
                 this.client.Close();
             }
             this.client = new TcpClient(AddressFamily.InterNetwork);
         }
-
-        public void send(string data) {
+        /// <summary>
+        /// Sends the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <exception cref="IOException"></exception>
+        public void Send(string data) {
             try {
-                if (this.isConnected()) {
+                if (this.IsConnected()) {
                     NetworkStream networkStream = this.client.GetStream();
                     byte[] sendBytes = Encoding.ASCII.GetBytes(data);
                     networkStream.Write(sendBytes, 0, sendBytes.Length);
@@ -48,14 +63,20 @@ namespace FlightSimulatorApp.Model {
                 throw new IOException();
             }
         }
-
-        public void flush() {
+        /// <summary>
+        /// Flushes the stream.
+        /// </summary>
+        public void Flush() {
             this.client.GetStream().Flush();
         }
-        //todo: change after ex1
-        public virtual string read() {
+        /// <summary>
+        /// Reads the data.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="IOException"></exception>
+        public virtual string Read() {
             string dataToSend = string.Empty;
-            if (this.isConnected()) {
+            if (this.IsConnected()) {
                 NetworkStream ns = this.client.GetStream();
                 try {
                     if (ns.DataAvailable) {

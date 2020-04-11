@@ -59,7 +59,7 @@
                      TextChanged="PortTextBox_TextChanged" />
             <Button x:Name="ConnectButton" Content="Connect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                     Click="ConnectButton_Click" />
-            <Button x:Name="DisconnectButton" Content="Disconnect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+            <Button x:Name="DisconnectButton" Content="DisConnect" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                     IsEnabled="False" Visibility="Collapsed" Click="DisconnectButton_Click" />
             <TextBlock x:Name="StatusTextBlock" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center"
                        HorizontalAlignment="Center" Visibility="Hidden" FontSize="12" />

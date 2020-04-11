@@ -42,7 +42,7 @@ namespace FlightSimulatorApp.Model {
 
         public event OnDisconnectEventHandler DisconnectOccured;
         public bool IsConnected {
-            get { return this.client.isConnected(); }
+            get { return this.client.IsConnected(); }
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
@@ -56,7 +56,9 @@ namespace FlightSimulatorApp.Model {
         public FlightGearTCPHandler()
             : this(new TelnetClientV2()) {
         }
-
+        /// <summary>
+        /// Initializes the parameters map.
+        /// </summary>
         private void initializeParametersMap() {
             // get parameters
             this.getParamPath = new BiDictionary<FG_InputProperties, string>();
@@ -93,13 +95,13 @@ namespace FlightSimulatorApp.Model {
         /// <param name="ip">The ip.</param>
         /// <param name="port">The port.</param>
         /// <exception cref="System.TimeoutException">if connection took longer then 15s to establish</exception>
-        public void connect(string ip, int port) {
+        public void Connect(string ip, int port) {
             TimeOutTimer timer = new TimeOutTimer(5);
             string error = string.Empty;
             timer.Start();
-            while (!this.client.isConnected() && !timer.TimePassed) {
+            while (!this.client.IsConnected() && !timer.TimePassed) {
                 try {
-                    this.client.connect(ip, port);
+                    this.client.Connect(ip, port);
                 } catch (SocketException socketException) {
                     error = "Remote socket unavailable";
                     continue;
@@ -111,23 +113,27 @@ namespace FlightSimulatorApp.Model {
                 }
             }
 
-            if (timer.TimePassed && !this.client.isConnected()) {
+            if (timer.TimePassed && !this.client.IsConnected()) {
                 throw new TimeoutException(error);
             }
         }
-
+        /// <summary>
+        /// Disconnects this instance.
+        /// </summary>
         public void Disconnect() {
-            this.stop();
+            this.Stop();
             while (this.threadsLive()) {
                 Thread.Sleep(1000);
             }
 
-            this.client.disconnect();
+            this.client.Disconnect();
             this.threadsList = new List<Thread>();
             this.buffer = string.Empty;
         }
-
-        public void start() {
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
+        public void Start() {
             this.stopped = false;
             Thread sendDataRequestsThread = new Thread(this.sendDataRequests);
             sendDataRequestsThread.Name = "sendDataRequestsThread";
@@ -140,22 +146,32 @@ namespace FlightSimulatorApp.Model {
         }
 
         /// <summary>Stops this instance.</summary>
-        public void stop() {
+        public void Stop() {
             this.stopped = true;
         }
-
+        /// <summary>
+        /// Sends the specified string.
+        /// </summary>
+        /// <param name="str">The string.</param>
         private void send(string str) {
             try {
-                this.client.send(str);
+                this.client.Send(str);
             } catch (Exception exception) {
                 this.DisconnectOccured?.Invoke(exception.Message);
             }
         }
-
-        public void setParameterValue(FG_OutputProperties param, double value) {
+        /// <summary>
+        /// Sets the parameter value.
+        /// </summary>
+        /// <param name="param">The parameter.</param>
+        /// <param name="value">The value.</param>
+        public void SetParameterValue(FG_OutputProperties param, double value) {
             this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
         }
-
+        /// <summary>
+        /// Checks if the thread is alive.
+        /// </summary>
+        /// <returns></returns>
         private bool threadsLive() {
             foreach (Thread thread in this.threadsList) {
                 if (thread.IsAlive) {
@@ -165,12 +181,14 @@ namespace FlightSimulatorApp.Model {
 
             return false;
         }
-
+        /// <summary>
+        /// Fills the buffer.
+        /// </summary>
         private void fillBuffer() {
             int count = 0;
             while (!this.stopped) {
                 try {
-                    this.buffer += this.client.read();
+                    this.buffer += this.client.Read();
                     if (this.buffer.Length > 10000) {
                         Thread.Sleep(1000);
                     }
@@ -185,7 +203,9 @@ namespace FlightSimulatorApp.Model {
                 }
             }
         }
-
+        /// <summary>
+        /// Sends the data requests.
+        /// </summary>
         private void sendDataRequests() {
             while (!this.stopped) {
                 foreach (KeyValuePair<FG_InputProperties, string> item in this.getParamPath) {
@@ -194,8 +214,11 @@ namespace FlightSimulatorApp.Model {
                 Thread.Sleep(250);
             }
         }
-
-        public IList<string> read() {
+        /// <summary>
+        /// Reads the data.
+        /// </summary>
+        /// <returns></returns>
+        public IList<string> Read() {
             IList<string> dataVector = null;
             bool gotData = false;
             while (!gotData) {
@@ -212,7 +235,11 @@ namespace FlightSimulatorApp.Model {
 
             return dataVector;
         }
-
+        /// <summary>
+        /// Parses the data.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
         private IList<string> parseData(string line) {
             IList<string> dataVector = new List<string>(3);
             string[] lineArr = line.Split(" ".ToCharArray());
@@ -235,7 +262,13 @@ namespace FlightSimulatorApp.Model {
 
             return dataVector;
         }
-
+        /// <summary>
+        /// Trims the data.
+        /// </summary>
+        /// <param name="word">The word.</param>
+        /// <param name="charsToTrim">The chars to trim.</param>
+        /// <param name="trimSpaces">if set to <c>true</c> [trim spaces].</param>
+        /// <returns></returns>
         private static string trimData(string word, string charsToTrim, bool trimSpaces = false) {
             StringBuilder stringBuilder = new StringBuilder();
             if (trimSpaces) {

@@ -14,7 +14,7 @@ namespace FlightSimulatorApp.Model {
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
         public FG_Data() {
         }
-
+        /// properties.
         public string Property {
             get => this.property;
             set => this.property = value;

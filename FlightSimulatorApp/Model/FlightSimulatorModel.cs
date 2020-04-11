@@ -49,14 +49,19 @@ namespace FlightSimulatorApp.Model {
         private ITCPHandler tcpHandler;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlightSimulatorModel"/> class.
+        /// </summary>
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
             this.tcpHandler.DisconnectOccured += delegate(string error) {
                 this.ConnectionStatus = Status.disconnect;
             };
         }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FlightSimulatorModel"/> class.
+        /// </summary>
+        /// <param name="tcpHandler">The TCP handler.</param>
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
             this.tcpHandler = tcpHandler;
             this.tcpHandler.DisconnectOccured += delegate (string error) {
@@ -67,26 +72,30 @@ namespace FlightSimulatorApp.Model {
         /// <summary>Connects the specified ip.</summary>
         /// <param name="ip">The ip.</param>
         /// <param name="port">The port.</param>
-        /// <exception cref="TimeoutException">if model wasn't able to connect</exception>
+        /// <exception cref="TimeoutException">if model wasn't able to Connect</exception>
         public bool Connect(string ip, int port) {
             try {
-                this.tcpHandler.connect(ip, port);
+                this.tcpHandler.Connect(ip, port);
                 this.resendSetValues();
                 return true;
             } catch (TimeoutException timeoutException) {
                 return false;
             }
         }
-
+        /// <summary>
+        /// Resends the set values.
+        /// </summary>
         private void resendSetValues() {
             
-                this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, this.Throttle);
-                this.tcpHandler.setParameterValue(FlightGearOutput.Rudder, this.Rudder);
-                this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, this.Aileron);
-                this.tcpHandler.setParameterValue(FlightGearOutput.Elevator, this.Elevator);
+                this.tcpHandler.SetParameterValue(FlightGearOutput.Throttle, this.Throttle);
+                this.tcpHandler.SetParameterValue(FlightGearOutput.Rudder, this.Rudder);
+                this.tcpHandler.SetParameterValue(FlightGearOutput.Aileron, this.Aileron);
+                this.tcpHandler.SetParameterValue(FlightGearOutput.Elevator, this.Elevator);
             
         }
-        
+        /// <summary>
+        /// Disconnects TcpHandler.
+        /// </summary>
         public async void Disconnect() {
             if (this.connectionStatus != Status.inActive) {
                 this.running = false;
@@ -94,7 +103,9 @@ namespace FlightSimulatorApp.Model {
                 this.ConnectionStatus = Status.inActive;
             }
         }
-
+        /// <summary>
+        /// Starts the TcpHandler.
+        /// </summary>
         public async void Start() {
             bool flag = false;
             if (!this.tcpHandler.IsConnected) {
@@ -102,7 +113,7 @@ namespace FlightSimulatorApp.Model {
             }
             if (flag) {
                 this.running = true;
-                await Task.Run(() => this.tcpHandler.start());
+                await Task.Run(() => this.tcpHandler.Start());
                 Thread runThread = new Thread(this.run);
                 runThread.Name = "runThread";
                 runThread.Start();
@@ -111,11 +122,13 @@ namespace FlightSimulatorApp.Model {
                 this.ConnectionStatus = Status.inActive;
             }
         }
-
+        /// <summary>
+        /// Reads the data, gets rhe propertyName and then parsing.
+        /// </summary>
         private void run() {
             while (this.running) {
                 try {
-                    IList<string> dataVector = this.tcpHandler.read();
+                    IList<string> dataVector = this.tcpHandler.Read();
                     FlightGearInput property = stringToEnum(dataVector[0]);
                     switch (property) {
                         case FlightGearInput.Heading:
@@ -190,18 +203,23 @@ namespace FlightSimulatorApp.Model {
             }
         }
 
-        private static FlightGearInput stringToEnum(string property) {
+        public static FlightGearInput stringToEnum(string property) {
             FlightGearInput enumProperty = (FlightGearInput)Enum.Parse(typeof(FlightGearInput), property, true);
             return enumProperty;
         }
-
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName) {
             if (this.PropertyChanged != null) {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-
-        private void NotifyError() {
+        /// <summary>
+        /// Notifies the error.
+        /// </summary>
+        private void notifyError() {
             string error = string.Empty;
             if (this.latitudeError) {
                 error = "latitude is out of boundaries";
@@ -217,7 +235,7 @@ namespace FlightSimulatorApp.Model {
 
             this.ErrorBoundaries = error;
         }
-
+        //properties:
         public bool Running {
             get { return this.running; }
         }
@@ -313,7 +331,7 @@ namespace FlightSimulatorApp.Model {
                 }
 
                 this.NotifyPropertyChanged("Longitude");
-                this.NotifyError();
+                this.notifyError();
             }
         }
 
@@ -337,7 +355,7 @@ namespace FlightSimulatorApp.Model {
                 }
 
                 this.NotifyPropertyChanged("Latitude");
-                this.NotifyError();
+                this.notifyError();
             }
         }
 
@@ -358,7 +376,7 @@ namespace FlightSimulatorApp.Model {
             set {
                 if (Math.Abs(this.throttle - value) > TOLERANCE) {
                     this.throttle = value;
-                    this.tcpHandler.setParameterValue(FlightGearOutput.Throttle, value);
+                    this.tcpHandler.SetParameterValue(FlightGearOutput.Throttle, value);
                 }
             }
         }
@@ -368,7 +386,7 @@ namespace FlightSimulatorApp.Model {
             set {
                 if (Math.Abs(this.rudder - value) > TOLERANCE) {
                     this.rudder = value;
-                    this.tcpHandler.setParameterValue(FlightGearOutput.Rudder, value);
+                    this.tcpHandler.SetParameterValue(FlightGearOutput.Rudder, value);
                 }
             }
         }
@@ -378,7 +396,7 @@ namespace FlightSimulatorApp.Model {
             set {
                 if (Math.Abs(this.elevator - value) > TOLERANCE) {
                     this.elevator = value;
-                    this.tcpHandler.setParameterValue(FlightGearOutput.Elevator, value);
+                    this.tcpHandler.SetParameterValue(FlightGearOutput.Elevator, value);
                 }
             }
         }
@@ -388,7 +406,7 @@ namespace FlightSimulatorApp.Model {
             set {
                 if (Math.Abs(this.aileron - value) > TOLERANCE) {
                     this.aileron = value;
-                    this.tcpHandler.setParameterValue(FlightGearOutput.Aileron, value);
+                    this.tcpHandler.SetParameterValue(FlightGearOutput.Aileron, value);
                 }
             }
         }

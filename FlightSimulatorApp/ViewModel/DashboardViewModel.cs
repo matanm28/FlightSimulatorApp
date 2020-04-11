@@ -8,6 +8,10 @@ namespace FlightSimulatorApp.ViewModel {
     using FlightSimulatorApp.Model;
 
     class DashboardViewModel : AFlightGearViewModel{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DashboardViewModel"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public DashboardViewModel(IFlightSimulatorModel model)
             : base(model) {
         }

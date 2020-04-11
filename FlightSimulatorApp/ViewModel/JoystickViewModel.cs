@@ -8,10 +8,16 @@ namespace FlightSimulatorApp.ViewModel {
     using FlightSimulatorApp.Model;
 
     class JoystickViewModel : AFlightGearViewModel{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JoystickViewModel"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public JoystickViewModel(IFlightSimulatorModel model)
             : base(model) {
         }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JoystickViewModel"/> class.
+        /// </summary>
         public JoystickViewModel() {
         }
 

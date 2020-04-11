@@ -9,15 +9,20 @@ namespace FlightSimulatorApp.Model {
     using System.Net.Sockets;
 
     class DummyTelnetClient : TelnetClientV2 {
-        /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DummyTelnetClient"/> class.
+        /// </summary>
         public DummyTelnetClient()
             : base() {
         }
-
-        /// <inheritdoc />
-        public override string read() {
+        /// <summary>
+        /// Reads the data.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="IOException"></exception>
+        public override string Read() {
             string dataToSend = string.Empty;
-            if (this.isConnected()) {
+            if (this.IsConnected()) {
                 NetworkStream ns = this.client.GetStream();
                 try {
                     byte[] dataBytes = new byte[Size];

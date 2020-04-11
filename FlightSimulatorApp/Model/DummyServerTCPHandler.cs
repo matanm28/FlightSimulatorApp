@@ -27,7 +27,7 @@ namespace FlightSimulatorApp.Model {
         public event OnDisconnectEventHandler DisconnectOccured;
 
         public bool IsConnected {
-            get { return this.client.isConnected(); }
+            get { return this.client.IsConnected(); }
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
@@ -42,7 +42,9 @@ namespace FlightSimulatorApp.Model {
         public DummyServerTCPHandler()
             : this(new DummyTelnetClient()) {
         }
-
+        /// <summary>
+        /// Initializes the parameters map.
+        /// </summary>
         private void initializeParametersMap() {
             // get parameters
             this.getParamPath = new BiDictionary<getProperties, string>();
@@ -87,13 +89,13 @@ namespace FlightSimulatorApp.Model {
         /// <param name="ip">The ip.</param>
         /// <param name="port">The port.</param>
         /// <exception cref="System.TimeoutException">if connection took longer then 15s to establish</exception>
-        public void connect(string ip, int port) {
+        public void Connect(string ip, int port) {
             TimeOutTimer timer = new TimeOutTimer(5);
             string error = string.Empty;
             timer.Start();
-            while (!this.client.isConnected() && !timer.TimePassed) {
+            while (!this.client.IsConnected() && !timer.TimePassed) {
                 try {
-                    this.client.connect(ip, port);
+                    this.client.Connect(ip, port);
                 } catch (SocketException socketException) {
                     error = "Remote socket unavailable";
                     continue;
@@ -105,23 +107,25 @@ namespace FlightSimulatorApp.Model {
                 }
             }
 
-            if (timer.TimePassed && !this.client.isConnected()) {
+            if (timer.TimePassed && !this.client.IsConnected()) {
                 throw new TimeoutException(error);
             }
         }
-
+        /// <summary>
+        /// Disconnects this instance.
+        /// </summary>
         public void Disconnect() {
-            this.stop();
+            this.Stop();
             while (this.threadsLive()) {
                 Thread.Sleep(1000);
             }
-            this.client.disconnect();
+            this.client.Disconnect();
             this.threadsList = new List<Thread>();
             this.buffer = string.Empty;
             this.parsingQueue.Clear();
         }
 
-        public void start() {
+        public void Start() {
             this.stopped = false;
             Thread sendDataRequestsThread = new Thread(this.sendDataRequests);
 
@@ -135,22 +139,22 @@ namespace FlightSimulatorApp.Model {
             this.threadsList.Add(fillBufferThread);
         }
 
-        public void stop() {
+        public void Stop() {
             this.stopped = true;
         }
 
         private void send(string str) {
             try {
-                this.client.send(str);
+                this.client.Send(str);
             } catch (Exception exception) {
                 this.DisconnectOccured?.Invoke(exception.Message);
             }
         }
 
-        //public async void setParameterValue(setProperties param, double value) {
-        //    Task task1 = new Task(() => this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n"));
+        //public async void SetParameterValue(setProperties param, double value) {
+        //    Task task1 = new Task(() => this.Send("set " + this.setParamPath[param] + value.ToString() + " \r\n"));
         //    Task<string> task2 = new Task<string>(
-        //        () => (this.setParamPath[param] + " '" + this.client.read().Replace('\n', '\'') + " \r\n/>"));
+        //        () => (this.setParamPath[param] + " '" + this.client.Read().Replace('\n', '\'') + " \r\n/>"));
         //    task1.RunSynchronously();
         //    await task1;
         //    task2.RunSynchronously();
@@ -162,15 +166,23 @@ namespace FlightSimulatorApp.Model {
         //    this.buffer += answer;
         //}
 
-        public void setParameterValue(setProperties param, double value) {
+        /// <summary>
+        /// Sets the parameter value.
+        /// </summary>
+        /// <param name="param">The parameter.</param>
+        /// <param name="value">The value.</param>
+        public void SetParameterValue(setProperties param, double value) {
             try {
                 this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
-                this.buffer += (this.setParamPath[param] + " '" + this.client.read().Replace('\n', '\'') + " \r\n/>");
+                this.buffer += (this.setParamPath[param] + " '" + this.client.Read().Replace('\n', '\'') + " \r\n/>");
             } catch (Exception e) {
                 DisconnectOccured?.Invoke(e.ToString());
             }
         }
-
+        /// <summary>
+        /// Threadses the live.
+        /// </summary>
+        /// <returns></returns>
         private bool threadsLive() {
             foreach (Thread thread in this.threadsList) {
                 if (thread.IsAlive) {
@@ -180,7 +192,9 @@ namespace FlightSimulatorApp.Model {
 
             return false;
         }
-
+        /// <summary>
+        /// Fills the buffer.
+        /// </summary>
         private void fillBuffer() {
             while (!this.stopped) {
                 try {
@@ -199,13 +213,15 @@ namespace FlightSimulatorApp.Model {
                 }
             }
         }
-
+        /// <summary>
+        /// Sends the data requests.
+        /// </summary>
         private void sendDataRequests() {
             while (!this.stopped) {
                 foreach (KeyValuePair<getProperties, string> item in this.getParamPath) {
                     try {
                         this.send("get " + item.Value + " \r\n");
-                        this.buffer += item.Value + " = '" + this.client.read().Replace('\n', '\'') + " (double) \r\n/>";
+                        this.buffer += item.Value + " = '" + this.client.Read().Replace('\n', '\'') + " (double) \r\n/>";
                     } catch (Exception e) {
                         DisconnectOccured?.Invoke(e.ToString());
                     }
@@ -214,8 +230,11 @@ namespace FlightSimulatorApp.Model {
                 Thread.Sleep(500);
             }
         }
-
-        public IList<string> read() {
+        /// <summary>
+        /// Reads the data.
+        /// </summary>
+        /// <returns></returns>
+        public IList<string> Read() {
             IList<string> dataVector = null;
             bool gotData = false;
             while (!gotData) {
@@ -236,7 +255,11 @@ namespace FlightSimulatorApp.Model {
 
             return dataVector;
         }
-
+        /// <summary>
+        /// Parses the data.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
         private IList<string> parseData(string line) {
             IList<string> dataVector = new List<string>(3);
             string[] lineArr = line.Split(" ".ToCharArray());

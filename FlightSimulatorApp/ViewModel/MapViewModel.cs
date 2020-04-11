@@ -12,6 +12,10 @@ namespace FlightSimulatorApp.ViewModel {
     class MapViewModel : AFlightGearViewModel {
         private Location location;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapViewModel"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public MapViewModel(IFlightSimulatorModel model)
             : base() {
             this.model = model;
@@ -21,6 +25,9 @@ namespace FlightSimulatorApp.ViewModel {
             };
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapViewModel"/> class.
+        /// </summary>
         public MapViewModel() {
         }
 
@@ -45,8 +52,12 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public override void setModel(IFlightSimulatorModel model) {
-            base.setModel(model);
+        /// <summary>
+        /// Sets the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+/        public override void SetModel(IFlightSimulatorModel model) {
+            base.SetModel(model);
             model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
                 if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {

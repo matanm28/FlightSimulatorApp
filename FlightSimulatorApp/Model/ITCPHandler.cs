@@ -10,15 +10,15 @@ namespace FlightSimulatorApp.Model {
     public delegate void OnDisconnectEventHandler(string error);
     public interface ITCPHandler {
         event OnDisconnectEventHandler DisconnectOccured;
-        void connect(string ip, int port);
+        void Connect(string ip, int port);
 
         void Disconnect();
-        void start();
+        void Start();
 
-        void stop();
+        void Stop();
 
-        void setParameterValue(Properties param, double value);
-        IList<string> read();
+        void SetParameterValue(Properties param, double value);
+        IList<string> Read();
 
         bool IsConnected { get; }
     }

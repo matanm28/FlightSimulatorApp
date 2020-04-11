@@ -51,7 +51,6 @@ namespace FlightSimulatorApp.ViewModel {
             get { return this.model.Rudder; }
             set { this.model.Rudder = value; }
         }
-
         public double VM_Elevator {
             get { return this.model.Elevator; }
             set { this.model.Elevator = value; }
@@ -60,7 +59,6 @@ namespace FlightSimulatorApp.ViewModel {
             get { return this.model.Aileron; }
             set { this.model.Aileron = value; }
         }
-
         public modelStatus VM_Status {
             get { return this.running; }
             set {
@@ -68,15 +66,12 @@ namespace FlightSimulatorApp.ViewModel {
                 this.NotifyPropertyChanged("VM_Status");
             }
         }
-
         public double VM_Latitude {
             get { return this.model.Latitude; }
         }
-
         public double VM_Longitude {
             get { return this.model.Longitude; }
         }
-
         public Location VM_Location {
             get { return this.location; }
             set { this.location = value; }
@@ -102,7 +97,11 @@ namespace FlightSimulatorApp.ViewModel {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-
+        /// <summary>
+        /// Start connecting.
+        /// </summary>
+        /// <param name="ip">The ip.</param>
+        /// <param name="port">The port.</param>
         public void Start(string ip, int port) {
             try {
                 this.model.Connect(ip, port);
