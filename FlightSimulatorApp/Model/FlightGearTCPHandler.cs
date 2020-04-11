@@ -116,7 +116,7 @@ namespace FlightSimulatorApp.Model {
             }
         }
 
-        public void disconnect() {
+        public void Disconnect() {
             this.stop();
             while (this.threadsLive()) {
                 Thread.Sleep(1000);
@@ -139,6 +139,7 @@ namespace FlightSimulatorApp.Model {
             this.threadsList.Add(fillBufferThread);
         }
 
+        /// <summary>Stops this instance.</summary>
         public void stop() {
             this.stopped = true;
         }

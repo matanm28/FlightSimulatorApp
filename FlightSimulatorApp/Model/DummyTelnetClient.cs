@@ -28,7 +28,6 @@ namespace FlightSimulatorApp.Model {
                     throw new IOException();
                 }
             }
-
             return dataToSend;
         }
     }

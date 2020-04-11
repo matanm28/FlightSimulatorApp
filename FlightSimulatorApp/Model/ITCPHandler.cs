@@ -12,7 +12,7 @@ namespace FlightSimulatorApp.Model {
         event OnDisconnectEventHandler DisconnectOccured;
         void connect(string ip, int port);
 
-        void disconnect();
+        void Disconnect();
         void start();
 
         void stop();

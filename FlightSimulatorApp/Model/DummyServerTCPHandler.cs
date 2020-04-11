@@ -110,7 +110,7 @@ namespace FlightSimulatorApp.Model {
             }
         }
 
-        public void disconnect() {
+        public void Disconnect() {
             this.stop();
             while (this.threadsLive()) {
                 Thread.Sleep(1000);

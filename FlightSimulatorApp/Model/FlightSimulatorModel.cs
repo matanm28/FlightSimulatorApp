@@ -90,7 +90,7 @@ namespace FlightSimulatorApp.Model {
         public async void Disconnect() {
             if (this.connectionStatus != Status.inActive) {
                 this.running = false;
-                await Task.Run(()=>this.tcpHandler.disconnect());
+                await Task.Run(()=>this.tcpHandler.Disconnect());
                 this.ConnectionStatus = Status.inActive;
             }
         }
