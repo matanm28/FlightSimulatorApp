@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Controls {
     using System.Globalization;
-    using System.IO;
     using System.Windows.Data;
-
+    /// <summary>
+    /// converts values for a text box
+    /// </summary>
+    /// <seealso cref="System.Windows.Data.IValueConverter" />
     [ValueConversion(typeof(DateTime), typeof(String))]
-    class TextBoxConverter : IValueConverter {
+    public class TextBoxConverter : IValueConverter {
         /// <summary>Converts a value. </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>

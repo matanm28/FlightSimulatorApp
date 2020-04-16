@@ -71,7 +71,6 @@
     <Compile Include="Controls\TextBoxConverter.cs" />
     <Compile Include="Model\DummyServerTCPHandler.cs" />
     <Compile Include="Model\DummyTelnetClient.cs" />
-    <Compile Include="Model\FG_Data.cs" />
     <Compile Include="Model\FlightGearTCPHandler.cs" />
     <Compile Include="Model\ITCPHandler.cs" />
     <Compile Include="Model\TelnetClientV2.cs" />

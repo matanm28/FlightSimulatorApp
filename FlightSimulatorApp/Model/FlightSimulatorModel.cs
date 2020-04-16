@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.Model {
-    using System.Collections;
     using System.ComponentModel;
     using System.IO;
-    using System.Net.Sockets;
-    using System.Runtime.CompilerServices;
     using System.Threading;
-    using System.Windows;
     using FlightGearInput = FlightGearTCPHandler.FG_InputProperties;
     using FlightGearOutput = FlightGearTCPHandler.FG_OutputProperties;
     using Status = Controls.ConnectionControl.Status;
-
+    /// <summary>
+    /// handles the incoming and outgoing data from Flight Gear Simulator.
+    /// </summary>
+    /// <seealso cref="FlightSimulatorApp.Model.IFlightSimulatorModel" />
     public class FlightSimulatorModel : IFlightSimulatorModel {
         private const double TOLERANCE = 0.0001;
         private const double MIN_LATITUDE = -90.0;
@@ -48,13 +43,16 @@ namespace FlightSimulatorApp.Model {
 
         private ITCPHandler tcpHandler;
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// Initializes a new instance of the <see cref="FlightSimulatorModel"/> class.
         /// </summary>
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
-            this.tcpHandler.DisconnectOccured += delegate(string error) {
+            this.tcpHandler.DisconnectOccurred += delegate (string error) {
                 this.ConnectionStatus = Status.disconnect;
             };
         }
@@ -64,7 +62,7 @@ namespace FlightSimulatorApp.Model {
         /// <param name="tcpHandler">The TCP handler.</param>
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
             this.tcpHandler = tcpHandler;
-            this.tcpHandler.DisconnectOccured += delegate (string error) {
+            this.tcpHandler.DisconnectOccurred += delegate (string error) {
                 this.ConnectionStatus = Status.disconnect;
             };
         }
@@ -86,12 +84,12 @@ namespace FlightSimulatorApp.Model {
         /// Resends the set values.
         /// </summary>
         private void resendSetValues() {
-            
-                this.tcpHandler.SetParameterValue(FlightGearOutput.Throttle, this.Throttle);
-                this.tcpHandler.SetParameterValue(FlightGearOutput.Rudder, this.Rudder);
-                this.tcpHandler.SetParameterValue(FlightGearOutput.Aileron, this.Aileron);
-                this.tcpHandler.SetParameterValue(FlightGearOutput.Elevator, this.Elevator);
-            
+
+            this.tcpHandler.SetParameterValue(FlightGearOutput.Throttle, this.Throttle);
+            this.tcpHandler.SetParameterValue(FlightGearOutput.Rudder, this.Rudder);
+            this.tcpHandler.SetParameterValue(FlightGearOutput.Aileron, this.Aileron);
+            this.tcpHandler.SetParameterValue(FlightGearOutput.Elevator, this.Elevator);
+
         }
         /// <summary>
         /// Disconnects TcpHandler.
@@ -99,7 +97,7 @@ namespace FlightSimulatorApp.Model {
         public async void Disconnect() {
             if (this.connectionStatus != Status.inActive) {
                 this.running = false;
-                await Task.Run(()=>this.tcpHandler.Disconnect());
+                await Task.Run(() => this.tcpHandler.Disconnect());
                 this.ConnectionStatus = Status.inActive;
             }
         }
@@ -109,7 +107,7 @@ namespace FlightSimulatorApp.Model {
         public async void Start() {
             bool flag = false;
             if (!this.tcpHandler.IsConnected) {
-               flag = await Task<bool>.Run(() => this.Connect(this.IpAddress,this.Port));
+                flag = await Task<bool>.Run(() => this.Connect(this.IpAddress, this.Port));
             }
             if (flag) {
                 this.running = true;
@@ -431,7 +429,7 @@ namespace FlightSimulatorApp.Model {
 
         public string IpAddress {
             get => this.ipAddress;
-            set { 
+            set {
                 this.ipAddress = value;
                 NotifyPropertyChanged("IpAddress");
             }

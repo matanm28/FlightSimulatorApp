@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FlightSimulatorApp.ViewModel {
+﻿namespace FlightSimulatorApp.ViewModel {
     using FlightSimulatorApp.Model;
 
-    class DashboardViewModel : AFlightGearViewModel{
+    class DashboardViewModel : AFlightGearViewModel {
         /// <summary>
         /// Initializes a new instance of the <see cref="DashboardViewModel"/> class.
         /// </summary>
@@ -15,7 +9,9 @@ namespace FlightSimulatorApp.ViewModel {
         public DashboardViewModel(IFlightSimulatorModel model)
             : base(model) {
         }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DashboardViewModel"/> class.
+        /// </summary>
         public DashboardViewModel() {
         }
 

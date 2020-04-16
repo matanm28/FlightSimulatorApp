@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maps.MapControl.WPF;
-
-namespace FlightSimulatorApp.Model {
+﻿namespace FlightSimulatorApp.Model {
     using System.ComponentModel;
     using Status = Controls.ConnectionControl.Status;
 
+    /// <summary>
+    /// an interface for Flight Gear simulator model
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public interface IFlightSimulatorModel : INotifyPropertyChanged {
+        /// <summary>
+        /// Connects the specified IP at the specified port
+        /// </summary>
+        /// <param name="ip">The IP.</param>
+        /// <param name="port">The port.</param>
+        /// <returns></returns>
         bool Connect(string ip, int port);
 
+        /// <summary>
+        /// Disconnects this instance.
+        /// </summary>
         void Disconnect();
 
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         void Start();
 
         //model properties

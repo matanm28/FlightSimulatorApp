@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.TextFormatting;
 
 namespace FlightSimulatorApp.Model {
-    using System.Collections;
     using System.Net;
     using System.Net.Sockets;
-    using System.Windows;
 
     /// <summary>an implementation for a ITelnetClient.</summary>
     /// <seealso cref="FlightSimulatorApp.Model.ITelnetClient" />
@@ -79,10 +72,19 @@ namespace FlightSimulatorApp.Model {
             return dataToSend;
         }
 
+        /// <summary>
+        /// Determines whether this instance is connected.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsConnected() {
             return this.client.Connected;
         }
 
+        /// <summary>
+        /// Flushes this instance's buffer.
+        /// </summary>
         public void Flush() {
             this.client.GetStream().Flush();
         }
@@ -93,10 +95,14 @@ namespace FlightSimulatorApp.Model {
             int lenght = input.IndexOf('\'', startIndex) - startIndex;
             return input.Substring(startIndex, lenght);
         }
-
+        /// <summary>
+        /// Gets or sets the delimiter.
+        /// </summary>
+        /// <value>
+        /// The delimiter.
+        /// </value>
         public string Delimiter {
             get { return "\r\n>"; }
-            set { }
         }
     }
 }

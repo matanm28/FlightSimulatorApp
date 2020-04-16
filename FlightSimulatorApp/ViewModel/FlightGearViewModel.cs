@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maps.MapControl.WPF;
+﻿using Microsoft.Maps.MapControl.WPF;
+using System;
 
 namespace FlightSimulatorApp.ViewModel {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using FlightSimulatorApp.Controls;
     using FlightSimulatorApp.Model;
+    using System.ComponentModel;
     using modelStatus = Controls.ConnectionControl.Status;
-
+    /// <summary>
+    /// all the view models in one instance.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class FlightGearViewModel : INotifyPropertyChanged {
         private IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -81,7 +78,7 @@ namespace FlightSimulatorApp.ViewModel {
         /// <param name="model"></param>
         public FlightGearViewModel(IFlightSimulatorModel model) {
             this.model = model;
-            model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e) {
+            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
                 if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {
                     this.VM_Location = new Location(VM_Latitude, VM_Longitude);
@@ -110,7 +107,9 @@ namespace FlightSimulatorApp.ViewModel {
                 throw e;
             }
         }
-
+        /// <summary>
+        /// Stops this instance.
+        /// </summary>
         public void Stop() {
             this.model.Disconnect();
         }

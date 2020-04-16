@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
     using System.IO;
     using System.Net;
-    using System.Net.NetworkInformation;
     using System.Net.Sockets;
 
     class TelnetClientV2 : ITelnetClient {
@@ -88,7 +84,7 @@ namespace FlightSimulatorApp.Model {
                 } catch (Exception e) {
                     throw new IOException();
                 }
-            } 
+            }
 
             return dataToSend;
 

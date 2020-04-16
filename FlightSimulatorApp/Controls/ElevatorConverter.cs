@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Controls {
     using System.Globalization;
     using System.Windows.Data;
 
-    class ElevatorConverter : IValueConverter{
+    /// <summary>
+    /// converts the elevator value to be inverted
+    /// </summary>
+    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    public class ElevatorConverter : IValueConverter {
         /// <summary>Converts a value. </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -16,7 +16,7 @@ namespace FlightSimulatorApp.Controls {
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value. If the method returns <see langword="null" />, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return -(double) value;
+            return -(double)value;
         }
 
         /// <summary>Converts a value. </summary>

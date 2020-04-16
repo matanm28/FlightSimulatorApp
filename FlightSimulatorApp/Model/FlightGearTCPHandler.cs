@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
-    using System.Collections;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Net.Sockets;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Windows;
     using FlightSimulatorApp.Utilities;
-    using Timer = System.Timers.Timer;
+    using System.Net.Sockets;
+    using System.Threading;
 
     public class FlightGearTCPHandler : ITCPHandler {
+
+        /// <summary>
+        /// Flight Gear's input (get) properties.
+        /// </summary>
         public enum FG_InputProperties {
             Heading,
             VerticalSpeed,
@@ -30,6 +26,9 @@ namespace FlightSimulatorApp.Model {
             Latitude
         }
 
+        /// <summary>
+        /// Flight Gear's output (set) properties.
+        /// </summary>
         public enum FG_OutputProperties { Throttle, Rudder, Elevator, Aileron }
 
         private BiDictionary<FG_InputProperties, string> getParamPath;
@@ -40,7 +39,16 @@ namespace FlightSimulatorApp.Model {
         private volatile bool stopped;
         private const string Delimiter = "\r\n/>";
 
-        public event OnDisconnectEventHandler DisconnectOccured;
+        /// <summary>
+        /// Occurs when [disconnect occurred].
+        /// </summary>
+        public event OnDisconnectEventHandler DisconnectOccurred;
+        /// <summary>
+        /// Gets a value indicating whether this instance is connected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+        /// </value>
         public bool IsConnected {
             get { return this.client.IsConnected(); }
         }
@@ -157,7 +165,7 @@ namespace FlightSimulatorApp.Model {
             try {
                 this.client.Send(str);
             } catch (Exception exception) {
-                this.DisconnectOccured?.Invoke(exception.Message);
+                this.DisconnectOccurred?.Invoke(exception.Message);
             }
         }
         /// <summary>
@@ -194,7 +202,7 @@ namespace FlightSimulatorApp.Model {
                     }
                 } catch (Exception e) {
                     if (count > 15) {
-                        DisconnectOccured?.Invoke(e.Message);
+                        this.DisconnectOccurred?.Invoke(e.Message);
                     } else {
                         Console.WriteLine(e);
                         count++;

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FlightSimulatorApp.ViewModel {
-    using System.ComponentModel;
+﻿namespace FlightSimulatorApp.ViewModel {
     using FlightSimulatorApp.Model;
     using Microsoft.Maps.MapControl.WPF;
+    using System.ComponentModel;
 
     class MapViewModel : AFlightGearViewModel {
         private Location location;
@@ -19,7 +13,7 @@ namespace FlightSimulatorApp.ViewModel {
         public MapViewModel(IFlightSimulatorModel model)
             : base() {
             this.model = model;
-            this.model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e) {
+            this.model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
                 this.VM_Location = new Location(VM_Latitude, VM_Longitude);
             };
@@ -56,9 +50,9 @@ namespace FlightSimulatorApp.ViewModel {
         /// Sets the model.
         /// </summary>
         /// <param name="model">The model.</param>
-/        public override void SetModel(IFlightSimulatorModel model) {
+        public override void SetModel(IFlightSimulatorModel model) {
             base.SetModel(model);
-            model.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e) {
+            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
                 if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {
                     this.VM_Location = new Location(VM_Latitude, VM_Longitude);

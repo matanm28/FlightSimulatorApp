@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FlightSimulatorApp.ViewModel {
-    using System.ComponentModel;
+﻿namespace FlightSimulatorApp.ViewModel {
+    using FlightSimulatorApp.Controls;
     using FlightSimulatorApp.Model;
     using Status = Controls.ConnectionControl.Status;
-    class ConnectionControlViewModel : AFlightGearViewModel{
+    /// <summary>
+    /// a concrete view model class who connects the model to the <see cref="ConnectionControl"/>
+    /// </summary>
+    /// <seealso cref="FlightSimulatorApp.ViewModel.AFlightGearViewModel" />
+    class ConnectionControlViewModel : AFlightGearViewModel {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectionControlViewModel"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public ConnectionControlViewModel(IFlightSimulatorModel model)
             : base(model) {
         }

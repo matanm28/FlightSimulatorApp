@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Model {
     using System.IO;
@@ -26,9 +23,9 @@ namespace FlightSimulatorApp.Model {
                 NetworkStream ns = this.client.GetStream();
                 try {
                     byte[] dataBytes = new byte[Size];
-                        int bytesRead = ns.Read(dataBytes, 0, Size);
-                        dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
-                        return dataToSend;
+                    int bytesRead = ns.Read(dataBytes, 0, Size);
+                    dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
+                    return dataToSend;
                 } catch (Exception e) {
                     throw new IOException();
                 }

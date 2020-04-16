@@ -1,16 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.Utilities {
     using System.Diagnostics;
 
-    class TimeOutTimer {
+    /// <summary>
+    /// a time out timer for general uses.
+    /// </summary>
+    public class TimeOutTimer {
+        /// <summary>
+        /// The timer
+        /// </summary>
         private Stopwatch timer = new Stopwatch();
+        /// <summary>
+        /// The time constrain.
+        /// </summary>
         private TimeSpan time;
-        private bool timePassed = false;
+        /// <summary>
+        /// indicates if time has passed
+        /// </summary>
+        private bool timePassed;
+        /// <summary>
+        /// Gets a value indicating whether [time passed].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [time passed]; otherwise, <c>false</c>.
+        /// </value>
         public bool TimePassed {
             get {
                 if (!this.timePassed) {
@@ -22,8 +36,8 @@ namespace FlightSimulatorApp.Utilities {
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public TimeOutTimer(int seconds=10) {
-            this.time = new TimeSpan(0,0,0,seconds);
+        public TimeOutTimer(int seconds = 10) {
+            this.time = new TimeSpan(0, 0, 0, seconds);
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
@@ -31,20 +45,28 @@ namespace FlightSimulatorApp.Utilities {
             this.time = new TimeSpan(0, 0, minutes, seconds);
         }
 
-
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         public void Start() {
             this.timer.Start();
         }
-
+        /// <summary>
+        /// Stops this instance.
+        /// </summary>
         public void Stop() {
             this.timer.Stop();
         }
-
+        /// <summary>
+        /// Resets this instance.
+        /// </summary>
         public void Reset() {
             this.timer.Reset();
             this.timePassed = false;
         }
-
+        /// <summary>
+        /// Checks the time.
+        /// </summary>
         private void checkTime() {
             if (this.timer.Elapsed > this.time) {
                 this.timePassed = true;

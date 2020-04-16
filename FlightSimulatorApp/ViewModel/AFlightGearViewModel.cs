@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightSimulatorApp.ViewModel {
-    using System.ComponentModel;
     using FlightSimulatorApp.Model;
+    using System.ComponentModel;
 
+    /// <summary>
+    /// An abstract base class for all Flight Gear view models.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     class AFlightGearViewModel : INotifyPropertyChanged {
         protected IFlightSimulatorModel model;
         public event PropertyChangedEventHandler PropertyChanged;
