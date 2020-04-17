@@ -1,4 +1,6 @@
 ﻿namespace FlightSimulatorApp.Model {
+    using System.Threading.Tasks;
+
     public interface ITelnetClient {
         /// <summary>
         /// Connects the specified IP at the specified port.
@@ -28,7 +30,7 @@
         /// Reads data from this instance stream.
         /// </summary>
         /// <returns></returns>
-        string Read();
+        Task<string> Read();
         /// <summary>
         /// Flushes this instance's buffer.
         /// </summary>

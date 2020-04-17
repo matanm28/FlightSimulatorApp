@@ -24,8 +24,10 @@ namespace FlightSimulatorApp.Controls {
                 string data = tempValue.ToString("####.#####");
                 return data;
             } catch (InvalidCastException e) {
+                Console.WriteLine(e);
                 return "Casting error";
             } catch (Exception e) {
+                Console.WriteLine(e);
                 return "Exception error";
             }
         }

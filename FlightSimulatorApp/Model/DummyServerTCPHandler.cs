@@ -23,8 +23,7 @@ namespace FlightSimulatorApp.Model {
         private Queue<string> parsingQueue;
         private ITelnetClient client;
         private volatile bool stopped;
-        private Mutex locker = new Mutex();
-        private int counter = 0;
+        private int counter;
 
         /// <summary>
         /// Occurs when [disconnect occurred].
@@ -39,9 +38,12 @@ namespace FlightSimulatorApp.Model {
         /// </value>
         public bool IsConnected => this.client.IsConnected();
 
-        /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
-        public DummyServerTCPHandler(ITelnetClient client) {
-            this.client = client;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DummyServerTCPHandler"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        private DummyServerTCPHandler(ITelnetClient client) {
+            this.client = new DummyTelnetClient();
             this.threadsList = new List<Thread>();
             this.parsingQueue = new Queue<string>();
             this.initializeParametersMap();
@@ -107,12 +109,15 @@ namespace FlightSimulatorApp.Model {
                 try {
                     this.client.Connect(ip, port);
                 } catch (SocketException socketException) {
+                    Console.WriteLine(socketException);
                     error = "Remote socket unavailable";
                     continue;
                 } catch (ArgumentOutOfRangeException argumentOutOfRangeException) {
+                    Console.WriteLine(argumentOutOfRangeException);
                     error = "Port number out of range";
                     continue;
                 } catch (Exception e) {
+                    Console.WriteLine(e);
                     error = "General Error";
                 }
             }
@@ -131,20 +136,18 @@ namespace FlightSimulatorApp.Model {
             this.client.Disconnect();
             this.threadsList = new List<Thread>();
             this.buffer = string.Empty;
-            this.parsingQueue.Clear();
+            this.parsingQueue = new Queue<string>();
         }
         /// <inheritdoc />
         public void Start() {
             this.stopped = false;
             Thread sendDataRequestsThread = new Thread(this.sendDataRequests);
-
             Thread fillBufferThread = new Thread(this.fillBuffer);
             sendDataRequestsThread.Name = "sendDataRequestsThread";
             sendDataRequestsThread.Start();
-
+            fillBufferThread.Name = nameof(fillBufferThread);
             fillBufferThread.Start();
             this.threadsList.Add(sendDataRequestsThread);
-
             this.threadsList.Add(fillBufferThread);
         }
 
@@ -168,12 +171,15 @@ namespace FlightSimulatorApp.Model {
         /// </summary>
         /// <param name="param">The parameter.</param>
         /// <param name="value">The value.</param>
-        public void SetParameterValue(setProperties param, double value) {
+        public async void SetParameterValue(setProperties param, double value) {
             try {
                 this.send("set " + this.setParamPath[param] + value.ToString() + " \r\n");
-                this.buffer += this.setParamPath[param] + " '" + this.client.Read().Replace('\n', '\'') + " \r\n/>";
+                string data = await this.client.Read();
+                this.buffer += this.setParamPath[param] + " '" +data.Replace('\n', '\'') + " \r\n/>";
             } catch (Exception e) {
-                this.DisconnectOccurred?.Invoke(e.ToString());
+                if (!this.stopped) {
+                    this.DisconnectOccurred?.Invoke(e.ToString());
+                }
             }
         }
 
@@ -217,18 +223,21 @@ namespace FlightSimulatorApp.Model {
         /// <summary>
         /// Sends the data requests.
         /// </summary>
-        private void sendDataRequests() {
+        private async void sendDataRequests() {
             while (!this.stopped) {
                 foreach (KeyValuePair<getProperties, string> item in this.getParamPath) {
                     try {
                         this.send("get " + item.Value + " \r\n");
-                        this.buffer += item.Value + " = '" + this.client.Read().Replace('\n', '\'')
+                        string data = await this.client.Read().ConfigureAwait(false);
+                        this.buffer += item.Value + " = '" + data.Replace('\n', '\'')
                                        + " (double) \r\n/>";
                     } catch (Exception e) {
-                        this.DisconnectOccurred?.Invoke(e.ToString());
+                        if (!this.stopped) {
+                            this.DisconnectOccurred?.Invoke(e.ToString());
+                        }
+                        return;
                     }
                 }
-
                 Thread.Sleep(500);
             }
         }
@@ -240,16 +249,17 @@ namespace FlightSimulatorApp.Model {
         public IList<string> Read() {
             IList<string> dataVector = null;
             bool gotData = false;
-            while (!gotData) {
+            int flagCount = 0;
+            while (!gotData && !this.stopped) {
                 if (this.parsingQueue.Count > 0) {
                     string line = this.parsingQueue.Dequeue();
                     dataVector = this.parseData(line);
                     if (dataVector != null) {
                         gotData = true;
-                    } else if (this.counter > 10) {
+                    } else if (this.counter > 100) {
                         this.counter = 0;
                         this.buffer = string.Empty;
-                        Thread.Sleep(50);
+                        Thread.Sleep(500);
                     } else {
                         this.counter++;
                     }

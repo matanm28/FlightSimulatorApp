@@ -21,7 +21,7 @@ namespace FlightSimulatorApp.Utilities {
         /// </value>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public TValue this[TKey key] {
+        public new TValue this[TKey key] {
             get { return base[key]; }
             set {
                 base[key] = value;
@@ -50,7 +50,7 @@ namespace FlightSimulatorApp.Utilities {
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public TKey getKeyFromValue(TValue value) {
+        public TKey GetKeyFromValue(TValue value) {
             return this.keyToValue[value];
         }
 
@@ -59,7 +59,7 @@ namespace FlightSimulatorApp.Utilities {
         /// </summary>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be <see langword="null" /> for reference types.</param>
-        public void Add(TKey key, TValue value) {
+        public new void Add(TKey key, TValue value) {
             base.Add(key, value);
             this.keyToValue.Add(value, key);
         }

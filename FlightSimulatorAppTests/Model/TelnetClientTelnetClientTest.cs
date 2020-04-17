@@ -15,15 +15,15 @@ namespace FlightSimulatorApp.Model.Tests {
 
         [TestMethod()]
 
-        public void ReadTest() {
+        public async void ReadTest() {
             string expected = "/instrumentation/heading-indicator/indicated-heading-deg =  (double)\r\n/> ";
             string expected1 = "/controls/engines/current-engine/throttle =  (double)\r\n/> ";
             TelnetClient client = new TelnetClient();
             client.Connect("127.0.0.1", 5402);
             client.Send("get /instrumentation/heading-indicator/indicated-heading-deg \r\n");
-            string result = client.Read();
+            string result = await client.Read();
             client.Send("set /controls/engines/current-engine/throttle 1 \r\n");
-            string result1 = client.Read();
+            string result1 = await client.Read();
             int index = result.IndexOf('\'');
             int end = result.IndexOf('\'', index + 1);
             result = result.Remove(index, end - index + 1);

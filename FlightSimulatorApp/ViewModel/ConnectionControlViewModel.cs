@@ -7,6 +7,11 @@
     /// </summary>
     /// <seealso cref="FlightSimulatorApp.ViewModel.AFlightGearViewModel" />
     class ConnectionControlViewModel : AFlightGearViewModel {
+        /// <inheritdoc />
+        public ConnectionControlViewModel() {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionControlViewModel"/> class.
         /// </summary>

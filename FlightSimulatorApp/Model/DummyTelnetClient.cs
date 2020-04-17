@@ -4,6 +4,7 @@ using System.Text;
 namespace FlightSimulatorApp.Model {
     using System.IO;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     class DummyTelnetClient : TelnetClientV2 {
         /// <summary>
@@ -17,17 +18,17 @@ namespace FlightSimulatorApp.Model {
         /// </summary>
         /// <returns></returns>
         /// <exception cref="IOException"></exception>
-        public override string Read() {
+        public override async Task<string> Read() {
             string dataToSend = string.Empty;
             if (this.IsConnected()) {
                 NetworkStream ns = this.client.GetStream();
                 try {
                     byte[] dataBytes = new byte[Size];
-                    int bytesRead = ns.Read(dataBytes, 0, Size);
+                    int bytesRead = await ns.ReadAsync(dataBytes, 0, Size).ConfigureAwait(false);
                     dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
                     return dataToSend;
                 } catch (Exception e) {
-                    throw new IOException();
+                    throw new IOException(e.Message);
                 }
             }
             return dataToSend;

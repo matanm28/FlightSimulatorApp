@@ -9,6 +9,7 @@ namespace FlightSimulatorApp.Model {
     using FlightGearInput = FlightGearTCPHandler.FG_InputProperties;
     using FlightGearOutput = FlightGearTCPHandler.FG_OutputProperties;
     using Status = Controls.ConnectionControl.Status;
+
     /// <summary>
     /// handles the incoming and outgoing data from Flight Gear Simulator.
     /// </summary>
@@ -40,29 +41,30 @@ namespace FlightSimulatorApp.Model {
         private string ipAddress;
         private int port;
         private Status connectionStatus = Status.inActive;
-
         private ITCPHandler tcpHandler;
 
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FlightSimulatorModel"/> class.
         /// </summary>
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
-            this.tcpHandler.DisconnectOccurred += delegate (string error) {
+            this.tcpHandler.DisconnectOccurred += delegate(string error) {
                 this.ConnectionStatus = Status.disconnect;
             };
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FlightSimulatorModel"/> class.
         /// </summary>
         /// <param name="tcpHandler">The TCP handler.</param>
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
             this.tcpHandler = tcpHandler;
-            this.tcpHandler.DisconnectOccurred += delegate (string error) {
+            this.tcpHandler.DisconnectOccurred += delegate(string error) {
                 this.ConnectionStatus = Status.disconnect;
             };
         }
@@ -76,21 +78,23 @@ namespace FlightSimulatorApp.Model {
                 this.tcpHandler.Connect(ip, port);
                 this.resendSetValues();
                 return true;
-            } catch (TimeoutException timeoutException) {
+            }
+            catch (TimeoutException timeoutException) {
+                Console.WriteLine(timeoutException);
                 return false;
             }
         }
+
         /// <summary>
         /// Resends the set values.
         /// </summary>
         private void resendSetValues() {
-
             this.tcpHandler.SetParameterValue(FlightGearOutput.Throttle, this.Throttle);
             this.tcpHandler.SetParameterValue(FlightGearOutput.Rudder, this.Rudder);
             this.tcpHandler.SetParameterValue(FlightGearOutput.Aileron, this.Aileron);
             this.tcpHandler.SetParameterValue(FlightGearOutput.Elevator, this.Elevator);
-
         }
+
         /// <summary>
         /// Disconnects TcpHandler.
         /// </summary>
@@ -101,6 +105,7 @@ namespace FlightSimulatorApp.Model {
                 this.ConnectionStatus = Status.inActive;
             }
         }
+
         /// <summary>
         /// Starts the TcpHandler.
         /// </summary>
@@ -109,6 +114,7 @@ namespace FlightSimulatorApp.Model {
             if (!this.tcpHandler.IsConnected) {
                 flag = await Task<bool>.Run(() => this.Connect(this.IpAddress, this.Port));
             }
+
             if (flag) {
                 this.running = true;
                 await Task.Run(() => this.tcpHandler.Start());
@@ -120,6 +126,7 @@ namespace FlightSimulatorApp.Model {
                 this.ConnectionStatus = Status.inActive;
             }
         }
+
         /// <summary>
         /// Reads the data, gets rhe propertyName and then parsing.
         /// </summary>
@@ -127,6 +134,9 @@ namespace FlightSimulatorApp.Model {
             while (this.running) {
                 try {
                     IList<string> dataVector = this.tcpHandler.Read();
+                    if (dataVector == null) {
+                        return;
+                    }
                     FlightGearInput property = stringToEnum(dataVector[0]);
                     switch (property) {
                         case FlightGearInput.Heading:
@@ -192,9 +202,12 @@ namespace FlightSimulatorApp.Model {
                         default:
                             break;
                     }
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
+                    Console.WriteLine(e);
                     this.Disconnect();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     Console.WriteLine(e);
                     continue;
                 }
@@ -205,6 +218,7 @@ namespace FlightSimulatorApp.Model {
             FlightGearInput enumProperty = (FlightGearInput)Enum.Parse(typeof(FlightGearInput), property, true);
             return enumProperty;
         }
+
         /// <summary>
         /// Notifies the property changed.
         /// </summary>
@@ -214,6 +228,7 @@ namespace FlightSimulatorApp.Model {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
+
         /// <summary>
         /// Notifies the error.
         /// </summary>
@@ -233,7 +248,8 @@ namespace FlightSimulatorApp.Model {
 
             this.ErrorBoundaries = error;
         }
-        //properties:
+
+        // properties:
         public bool Running {
             get { return this.running; }
         }
@@ -422,6 +438,7 @@ namespace FlightSimulatorApp.Model {
                             this.Disconnect();
                             break;
                     }
+
                     this.NotifyPropertyChanged("ConnectionStatus");
                 }
             }
@@ -440,7 +457,6 @@ namespace FlightSimulatorApp.Model {
                 this.port = value;
                 NotifyPropertyChanged("Port");
             }
-
         }
     }
 }

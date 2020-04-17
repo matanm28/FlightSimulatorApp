@@ -4,6 +4,7 @@ using System.Text;
 namespace FlightSimulatorApp.Model {
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     /// <summary>an implementation for a ITelnetClient.</summary>
     /// <seealso cref="FlightSimulatorApp.Model.ITelnetClient" />
@@ -53,12 +54,12 @@ namespace FlightSimulatorApp.Model {
 
         /// <summary>Reads this instance.</summary>
         /// <returns>the entire buffer as string</returns>
-        public string Read() {
+        public async Task<string> Read() {
             NetworkStream ns = this.client.GetStream();
             byte[] dataBytes = new byte[Size];
             string dataToSend = string.Empty;
             while (!this.buffer.Contains("\r\n/>")) {
-                int bytesRead = ns.Read(dataBytes, 0, Size);
+                int bytesRead = await ns.ReadAsync(dataBytes, 0, Size).ConfigureAwait(false);
                 this.buffer += Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
             }
 

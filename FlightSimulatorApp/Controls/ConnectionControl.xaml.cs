@@ -145,7 +145,7 @@ namespace FlightSimulatorApp.Controls {
             try {
                 Dispatcher.Invoke(this.animation);
             } catch (Exception exception) {
-                Console.WriteLine(e);
+                Console.WriteLine(exception);
             }
         }
         /// <summary>
@@ -294,6 +294,7 @@ namespace FlightSimulatorApp.Controls {
                         return false;
                     }
                 } catch (Exception e) {
+                    Console.WriteLine(e);
                     return false;
                 }
             }
@@ -307,16 +308,15 @@ namespace FlightSimulatorApp.Controls {
         /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
         private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             try {
-                if (this.PortTextBox.Text.Length == 0) {
+                if (this.PortTextBox.Text == string.Empty) {
                     this.PortTextBox.Background = Brushes.White;
-                }
-
-                if (validatePort(int.Parse(this.PortTextBox.Text))) {
+                } else if (validatePort(int.Parse(this.PortTextBox.Text))) {
                     this.PortTextBox.Background = Brushes.LightGreen;
                 } else {
                     this.PortTextBox.Background = Brushes.Red;
                 }
             } catch (Exception exception) {
+                Console.WriteLine(exception);
                 this.PortTextBox.Background = Brushes.Red;
             }
         }

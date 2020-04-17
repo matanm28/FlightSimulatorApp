@@ -23,9 +23,6 @@ namespace FlightSimulatorApp.ViewModel {
         /// <param name="model">The model.</param>
         public AFlightGearViewModel(IFlightSimulatorModel model) {
             this.model = model;
-            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
-                this.NotifyPropertyChanged("VM_" + e.PropertyName);
-            };
         }
 
         /// <summary>Notifies the property changed.</summary>
@@ -66,6 +63,9 @@ namespace FlightSimulatorApp.ViewModel {
         /// <param name="model">The model.</param>
         public virtual void SetModel(IFlightSimulatorModel model) {
             this.model = model;
+            model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
+                this.NotifyPropertyChanged("VM_" + e.PropertyName);
+            };
         }
 
     }

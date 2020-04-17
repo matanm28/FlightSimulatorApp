@@ -11,12 +11,7 @@
         /// </summary>
         /// <param name="model">The model.</param>
         public MapViewModel(IFlightSimulatorModel model)
-            : base() {
-            this.model = model;
-            this.model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
-                this.NotifyPropertyChanged("VM_" + e.PropertyName);
-                this.VM_Location = new Location(VM_Latitude, VM_Longitude);
-            };
+            : base(model) {
         }
 
         /// <summary>
@@ -51,7 +46,7 @@
         /// </summary>
         /// <param name="model">The model.</param>
         public override void SetModel(IFlightSimulatorModel model) {
-            base.SetModel(model);
+            this.model = model;
             model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e) {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
                 if (e.PropertyName == "Latitude" || e.PropertyName == "Longitude") {

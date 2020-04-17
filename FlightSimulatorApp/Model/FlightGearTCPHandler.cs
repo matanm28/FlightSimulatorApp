@@ -111,12 +111,15 @@ namespace FlightSimulatorApp.Model {
                 try {
                     this.client.Connect(ip, port);
                 } catch (SocketException socketException) {
+                    Console.WriteLine(socketException);
                     error = "Remote socket unavailable";
                     continue;
                 } catch (ArgumentOutOfRangeException argumentOutOfRangeException) {
+                    Console.WriteLine(argumentOutOfRangeException);
                     error = "Port number out of range";
                     continue;
                 } catch (Exception e) {
+                    Console.WriteLine(e);
                     error = "General Error";
                 }
             }

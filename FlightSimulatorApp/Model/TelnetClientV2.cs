@@ -5,6 +5,7 @@ namespace FlightSimulatorApp.Model {
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     class TelnetClientV2 : ITelnetClient {
         /// <summary>The size</summary>
@@ -17,6 +18,7 @@ namespace FlightSimulatorApp.Model {
         public TelnetClientV2() {
             this.client = new TcpClient(AddressFamily.InterNetwork);
         }
+
         /// <summary>
         /// Connects the client.
         /// </summary>
@@ -25,6 +27,7 @@ namespace FlightSimulatorApp.Model {
         public void Connect(string ip, int port) {
             this.client.Connect(IPAddress.Parse(ip), port);
         }
+
         /// <summary>
         /// Determines whether this instance is connected.
         /// </summary>
@@ -34,6 +37,7 @@ namespace FlightSimulatorApp.Model {
         public bool IsConnected() {
             return this.client.Connected;
         }
+
         /// <summary>
         /// Disconnects the client.
         /// </summary>
@@ -43,6 +47,7 @@ namespace FlightSimulatorApp.Model {
             }
             this.client = new TcpClient(AddressFamily.InterNetwork);
         }
+
         /// <summary>
         /// Sends the specified data.
         /// </summary>
@@ -55,39 +60,42 @@ namespace FlightSimulatorApp.Model {
                     byte[] sendBytes = Encoding.ASCII.GetBytes(data);
                     networkStream.Write(sendBytes, 0, sendBytes.Length);
                 }
-            } catch (Exception e) {
-                throw new IOException();
+            }
+            catch (Exception e) {
+                throw new IOException(e.Message);
             }
         }
+
         /// <summary>
         /// Flushes the stream.
         /// </summary>
         public void Flush() {
             this.client.GetStream().Flush();
         }
+
         /// <summary>
         /// Reads the data.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="IOException"></exception>
-        public virtual string Read() {
+        public virtual async Task<string> Read() {
             string dataToSend = string.Empty;
             if (this.IsConnected()) {
                 NetworkStream ns = this.client.GetStream();
                 try {
                     if (ns.DataAvailable) {
                         byte[] dataBytes = new byte[Size];
-                        int bytesRead = ns.Read(dataBytes, 0, Size);
+                        int bytesRead = await ns.ReadAsync(dataBytes, 0, Size).ConfigureAwait(false);
                         dataToSend = Encoding.ASCII.GetString(dataBytes, 0, bytesRead);
                         return dataToSend;
                     }
-                } catch (Exception e) {
-                    throw new IOException();
+                }
+                catch (Exception e) {
+                    throw new IOException(e.Message);
                 }
             }
 
             return dataToSend;
-
         }
     }
 }

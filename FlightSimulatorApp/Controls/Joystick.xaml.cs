@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace FlightSimulatorApp.Controls {
+    using System.Diagnostics;
     using System.Windows.Media.Animation;
 
     /// <summary>
@@ -51,12 +52,17 @@ namespace FlightSimulatorApp.Controls {
         /// Initializes a new instance of the <see cref="Joystick"/> class.
         /// </summary>
         public Joystick() {
-            InitializeComponent();
+            this.InitializeComponent();
             Storyboard sb = this.Knob.Resources["MoveKnob"] as Storyboard;
             DoubleAnimation animX = sb.Children[0] as DoubleAnimation;
             DoubleAnimation animY = sb.Children[1] as DoubleAnimation;
-            animX.From = 0;
-            animY.From = 0;
+            if (animX != null) {
+                animX.From = 0;
+            }
+            if (animY != null) {
+                animY.From = 0;
+            }
+
             this.knobCenter = new Point(this.Base.Width / 2, this.Base.Height / 2);
             this.ellipseCenter = new Point(this.borderEllipse.Width / 2, this.borderEllipse.Height / 2);
             this.borderRadius = this.borderEllipse.Width / 2;

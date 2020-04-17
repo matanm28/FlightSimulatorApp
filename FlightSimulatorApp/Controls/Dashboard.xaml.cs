@@ -6,11 +6,11 @@ namespace FlightSimulatorApp.Controls {
     /// </summary>
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
-    public partial class ControlsDisplay : UserControl {
+    public partial class Dashboard : UserControl {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ControlsDisplay"/> class.
+        /// Initializes a new instance of the <see cref="Dashboard"/> class.
         /// </summary>
-        public ControlsDisplay() {
+        public Dashboard() {
             InitializeComponent();
         }
     }
