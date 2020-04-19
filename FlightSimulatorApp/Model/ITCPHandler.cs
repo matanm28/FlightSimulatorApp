@@ -1,21 +1,14 @@
 ﻿using System.Collections.Generic;
 
 namespace FlightSimulatorApp.Model {
+    using System.ComponentModel;
     using Properties = FlightGearTCPHandler.FG_OutputProperties;
 
     /// <summary>
-    /// handles the event when the <see cref="ITCPHandler"> interface object </see> disconnects from it's specified server.
-    /// </summary>
-    /// <param name="error">The error.</param>
-    public delegate void OnDisconnectEventHandler(string error);
-    /// <summary>
     /// parses and handles data coming via TCP connection for a certain model.
     /// </summary>
-    public interface ITCPHandler {
-        /// <summary>
-        /// Occurs when [disconnect occurred].
-        /// </summary>
-        event OnDisconnectEventHandler DisconnectOccurred;
+    public interface ITCPHandler : INotifyPropertyChanged{
+        
         /// <summary>
         /// Connects the specified ip.
         /// </summary>
@@ -54,5 +47,13 @@ namespace FlightSimulatorApp.Model {
         /// <c>true</c> if this instance is connected; otherwise, <c>false</c>.
         /// </value>
         bool IsConnected { get; }
+
+        /// <summary>
+        /// Gets the error.
+        /// </summary>
+        /// <value>
+        /// The error.
+        /// </value>
+        string Error { get; set; }
     }
 }

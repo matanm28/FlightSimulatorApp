@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace FlightSimulatorApp.Model {
     using System.ComponentModel;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using FlightGearInput = FlightGearTCPHandler.FG_InputProperties;
     using FlightGearOutput = FlightGearTCPHandler.FG_OutputProperties;
@@ -53,9 +54,7 @@ namespace FlightSimulatorApp.Model {
         /// </summary>
         public FlightSimulatorModel() {
             this.tcpHandler = new FlightGearTCPHandler(new TelnetClientV2());
-            this.tcpHandler.DisconnectOccurred += delegate(string error) {
-                this.ConnectionStatus = Status.disconnect;
-            };
+            this.tcpHandler.PropertyChanged += this.PropertyChangedHandler;
         }
 
         /// <summary>
@@ -64,9 +63,22 @@ namespace FlightSimulatorApp.Model {
         /// <param name="tcpHandler">The TCP handler.</param>
         public FlightSimulatorModel(ITCPHandler tcpHandler) {
             this.tcpHandler = tcpHandler;
-            this.tcpHandler.DisconnectOccurred += delegate(string error) {
-                this.ConnectionStatus = Status.disconnect;
-            };
+            this.tcpHandler.PropertyChanged += this.PropertyChangedHandler;
+        }
+
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e) {
+            switch (e.PropertyName) {
+                case nameof(this.tcpHandler.Error):
+                    this.Error = this.tcpHandler.Error;
+                    break;
+                case nameof(this.tcpHandler.IsConnected):
+                    if (this.tcpHandler.IsConnected) {
+                        this.connectionStatus = Status.active;
+                    } else {
+                        this.ConnectionStatus = Status.disconnect;
+                    }
+                    break;
+            }
         }
 
         /// <summary>Connects the specified ip.</summary>
@@ -74,15 +86,12 @@ namespace FlightSimulatorApp.Model {
         /// <param name="port">The port.</param>
         /// <exception cref="TimeoutException">if model wasn't able to Connect</exception>
         public bool Connect(string ip, int port) {
-            try {
-                this.tcpHandler.Connect(ip, port);
+            this.tcpHandler.Connect(ip, port);
+            if (this.tcpHandler.IsConnected) {
                 this.resendSetValues();
-                return true;
             }
-            catch (TimeoutException timeoutException) {
-                Console.WriteLine(timeoutException);
-                return false;
-            }
+
+            return this.tcpHandler.IsConnected;
         }
 
         /// <summary>
@@ -456,6 +465,23 @@ namespace FlightSimulatorApp.Model {
             set {
                 this.port = value;
                 NotifyPropertyChanged("Port");
+            }
+        }
+        /// <summary>
+        /// Gets the error.
+        /// </summary>
+        /// <value>
+        /// The error.
+        /// </value>
+        public string Error {
+            get {
+                return this.tcpHandler.Error;
+            }
+            set {
+                if (value != null) {
+                    this.tcpHandler.Error = value;
+                    this.NotifyPropertyChanged(nameof(this.Error));
+                }
             }
         }
     }

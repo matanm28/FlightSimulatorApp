@@ -57,5 +57,7 @@
         string IpAddress { get; set; }
 
         int Port { get; set; }
+
+        string Error { get; set; }
     }
 }

@@ -15,10 +15,10 @@ namespace FlightSimulatorApp.Controls {
         private const float Second = 1000;
         private const string disconnected = "Simulator Disconnected";
         private const string connected = "Simulator Connected";
-        private string displayText = disconnected;
         private Timer timer = new Timer();
         private bool toggleLight = true;
-        private bool error = false;
+        private bool error;
+        private string errorString;
         private string ipAddress;
         private int port;
         private Status connectionStatus;
@@ -43,14 +43,41 @@ namespace FlightSimulatorApp.Controls {
             set { SetValue(ConnectionStatusProperty, value); }
         }
 
+        public static readonly DependencyProperty ErrorStringProperty = DependencyProperty.Register(
+            "ErrorString",
+            typeof(string),
+            typeof(ConnectionControl),
+            new FrameworkPropertyMetadata(default(string), OnErrorStringPropertyChanged));
+
+        public string ErrorString {
+            get { return (string)GetValue(ErrorStringProperty); }
+            set { SetValue(ErrorStringProperty, value); }
+        }
+
+        private static void OnErrorStringPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e) {
+            (obj as ConnectionControl).OnErrorStringPropertyChanged(e);
+        }
+
+        private void OnErrorStringPropertyChanged(DependencyPropertyChangedEventArgs e) {
+            this.errorString = (string)e.NewValue;
+            this.ErrorTextBlock.Text = this.errorString;
+            this.error = this.errorString != string.Empty;
+            if (!this.error) {
+                this.ErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+        }
+
         /// <summary>
         /// Called when [connection status property changed].
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-        private static void OnConnectionStatusPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e) {
+        private static void OnConnectionStatusPropertyChanged(
+            DependencyObject obj,
+            DependencyPropertyChangedEventArgs e) {
             (obj as ConnectionControl).OnConnectionStatusPropertyChanged(e);
         }
+
         /// <summary>
         /// Raises the <see cref="E:ConnectionStatusPropertyChanged" /> event.
         /// </summary>
@@ -66,21 +93,24 @@ namespace FlightSimulatorApp.Controls {
                     this.PortTextBox.IsEnabled = false;
                     break;
                 case Status.inActive:
-                    this.ErrorTextBlock.Text = string.Empty;
-                    this.ErrorTextBlock.Visibility = Visibility.Collapsed;
                     this.startDisplayText(disconnected, false);
                     this.changeButtonsDisplay(Status.inActive);
                     this.AddressTextBox.IsEnabled = true;
                     this.PortTextBox.IsEnabled = true;
                     break;
-                case Status.disconnect:
                 case Status.connect:
+                    this.ErrorString = string.Empty;
+                    this.StatusTextBlock.Text = "Waiting to simulator response";
+                    this.StatusTextBlock.Foreground = Brushes.Black;
+                    this.StatusTextBlock.Visibility = Visibility.Visible;
+                    break;
+                case Status.disconnect:
                     this.StatusTextBlock.Text = "Waiting to simulator response";
                     this.StatusTextBlock.Foreground = Brushes.Black;
                     this.StatusTextBlock.Visibility = Visibility.Visible;
                     break;
             }
-
+            
             this.connectionStatus = value;
         }
 
@@ -103,6 +133,7 @@ namespace FlightSimulatorApp.Controls {
             get { return this.ipAddress; }
             private set { SetValue(IpAddressProperty, value); }
         }
+
         /// <summary>
         /// The port property
         /// </summary>
@@ -111,6 +142,7 @@ namespace FlightSimulatorApp.Controls {
             typeof(int),
             typeof(ConnectionControl),
             new PropertyMetadata(5402));
+
         /// <summary>
         /// Gets the port.
         /// </summary>
@@ -125,17 +157,18 @@ namespace FlightSimulatorApp.Controls {
         public ConnectionControl() {
             InitializeComponent();
         }
+
         /// <summary>
         /// Handles the Loaded event of the UserControl control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
-            this.ErrorTextBlock.Text = this.displayText;
             this.timer.Interval = Second;
             this.timer.Elapsed += timer_Tick;
             this.startDisplayText(disconnected, false);
         }
+
         /// <summary>
         /// Handles the Tick event of the timer control.
         /// </summary>
@@ -144,10 +177,12 @@ namespace FlightSimulatorApp.Controls {
         private void timer_Tick(object sender, EventArgs e) {
             try {
                 Dispatcher.Invoke(this.animation);
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 Console.WriteLine(exception);
             }
         }
+
         /// <summary>
         /// runs the text animation for this instance.
         /// </summary>
@@ -173,6 +208,7 @@ namespace FlightSimulatorApp.Controls {
             this.startDisplayText(connected, true);
             this.changeButtonsDisplay(Status.active);
         }
+
         /// <summary>
         /// Handles the Click event of the ConnectButton control.
         /// </summary>
@@ -180,7 +216,6 @@ namespace FlightSimulatorApp.Controls {
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ConnectButton_Click(object sender, RoutedEventArgs e) {
             this.timer.Stop();
-            this.ErrorTextBlock.Visibility = Visibility.Collapsed;
             try {
                 string ip = this.AddressTextBox.Text;
                 int port = int.Parse(this.PortTextBox.Text);
@@ -189,18 +224,24 @@ namespace FlightSimulatorApp.Controls {
                     this.Port = port;
                     this.ConnectionStatus = Status.connect;
                 } else if (!validatePort(port) && !validateIP(ip)) {
-                    this.startDisplayText(disconnected, false, "Invalid Port & IP!");
+                    this.ErrorString = "Invalid Port & IP!";
+                    this.startDisplayText(disconnected, false);
                 } else if (!validatePort(port)) {
                     this.ipAddress = ip;
-                    this.startDisplayText(disconnected, false, "Invalid Port!");
+                    this.ErrorString = "Invalid Port!";
+                    this.startDisplayText(disconnected, false);
                 } else {
                     this.port = port;
-                    this.startDisplayText(disconnected, false, "Invalid IP!");
+                    this.ErrorString = "Invalid IP!";
+                    this.startDisplayText(disconnected, false);
                 }
-            } catch (Exception exception) {
-                this.startDisplayText(disconnected, false, exception.Message);
+            }
+            catch (Exception exception) {
+                this.ErrorString = exception.Message;
+                this.startDisplayText(disconnected, false);
             }
         }
+
         /// <summary>
         /// Handles the Click event of the DisconnectButton control.
         /// </summary>
@@ -209,6 +250,7 @@ namespace FlightSimulatorApp.Controls {
         private void DisconnectButton_Click(object sender, RoutedEventArgs e) {
             this.ConnectionStatus = Status.disconnect;
         }
+
         /// <summary>
         /// Changes the buttons display.
         /// </summary>
@@ -237,27 +279,29 @@ namespace FlightSimulatorApp.Controls {
 
             this.error = false;
         }
+
         /// <summary>
         /// Starts the display text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="connected">if set to <c>true</c> [connected].</param>
         /// <param name="errorString">The error string.</param>
-        private void startDisplayText(string text, bool connected, string errorString = "") {
+        private void startDisplayText(string text, bool connected) {
             this.StatusTextBlock.Text = "Status: " + text;
             if (connected) {
                 this.StatusTextBlock.Foreground = Brushes.LightGreen;
             } else {
                 this.StatusTextBlock.Foreground = Brushes.Red;
             }
-
-            if (errorString != string.Empty) {
-                this.error = true;
-                this.ErrorTextBlock.Text = errorString;
-            }
+            
+            //if (this.errorString != string.Empty) {
+            //    this.error = true;
+            //    this.ErrorTextBlock.Text = this.errorString;
+            //}
 
             this.timer.Start();
         }
+
         /// <summary>
         /// Handles the TextChanged event of the AddressTextBox control.
         /// </summary>
@@ -272,6 +316,7 @@ namespace FlightSimulatorApp.Controls {
                 this.AddressTextBox.Background = Brushes.Red;
             }
         }
+
         /// <summary>
         /// Validates the ip.
         /// </summary>
@@ -293,7 +338,8 @@ namespace FlightSimulatorApp.Controls {
                     if (!(num >= 0 && num <= 255)) {
                         return false;
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     Console.WriteLine(e);
                     return false;
                 }
@@ -301,6 +347,7 @@ namespace FlightSimulatorApp.Controls {
 
             return true;
         }
+
         /// <summary>
         /// Handles the TextChanged event of the PortTextBox control.
         /// </summary>
@@ -315,11 +362,13 @@ namespace FlightSimulatorApp.Controls {
                 } else {
                     this.PortTextBox.Background = Brushes.Red;
                 }
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 Console.WriteLine(exception);
                 this.PortTextBox.Background = Brushes.Red;
             }
         }
+
         /// <summary>
         /// Validates the port.
         /// </summary>

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 namespace FlightSimulatorApp.Model {
+    using System.ComponentModel;
+    using System.Diagnostics;
     using FlightSimulatorApp.Utilities;
     using System.Net.Sockets;
     using System.Threading;
@@ -40,10 +42,6 @@ namespace FlightSimulatorApp.Model {
         private const string Delimiter = "\r\n/>";
 
         /// <summary>
-        /// Occurs when [disconnect occurred].
-        /// </summary>
-        public event OnDisconnectEventHandler DisconnectOccurred;
-        /// <summary>
         /// Gets a value indicating whether this instance is connected.
         /// </summary>
         /// <value>
@@ -51,6 +49,11 @@ namespace FlightSimulatorApp.Model {
         /// </value>
         public bool IsConnected {
             get { return this.client.IsConnected(); }
+            private set {
+                if (!value) {
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsConnected)));
+                }
+            }
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Object" /> class.</summary>
@@ -167,8 +170,9 @@ namespace FlightSimulatorApp.Model {
         private void send(string str) {
             try {
                 this.client.Send(str);
-            } catch (Exception exception) {
-                this.DisconnectOccurred?.Invoke(exception.Message);
+            } catch (Exception e) {
+                Debug.WriteLine(e);
+                this.IsConnected = false;
             }
         }
         /// <summary>
@@ -205,7 +209,7 @@ namespace FlightSimulatorApp.Model {
                     }
                 } catch (Exception e) {
                     if (count > 15) {
-                        this.DisconnectOccurred?.Invoke(e.Message);
+                        this.IsConnected = this.client.IsConnected();
                     } else {
                         Console.WriteLine(e);
                         count++;
@@ -294,5 +298,15 @@ namespace FlightSimulatorApp.Model {
 
             return stringBuilder.ToString();
         }
+
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged;
+        /// <inheritdoc />
+        public string Error {
+            //todo: fix
+            get { return string.Empty; }
+            set { return;}
+        }
     }
+
 }

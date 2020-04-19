@@ -34,5 +34,10 @@
             set => this.model.Port = value;
         }
 
+        public string VM_Error {
+            get => this.model.Error;
+            set { this.model.Error = value; }
+        }
+
     }
 }

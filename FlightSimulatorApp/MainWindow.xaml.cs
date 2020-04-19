@@ -76,6 +76,15 @@ namespace FlightSimulatorApp {
             portBinder.Mode = BindingMode.OneWayToSource;
             portBinder.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             BindingOperations.SetBinding(this.ConnectionControl, Controls.ConnectionControl.PortProperty, portBinder);
+            Binding errorStringBinder = new Binding("VM_Error");
+            errorStringBinder.Source = this.connectionControlVm;
+            errorStringBinder.Mode = BindingMode.TwoWay;
+            errorStringBinder.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(
+                this.ConnectionControl,
+                Controls.ConnectionControl.ErrorStringProperty,
+                errorStringBinder);
+
         }
 
         
