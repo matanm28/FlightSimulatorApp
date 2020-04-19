@@ -24,7 +24,7 @@ namespace FlightSimulatorApp.Model {
         /// </summary>
         /// <param name="ip">The ip.</param>
         /// <param name="port">The port.</param>
-        public void Connect(string ip, int port) {
+        public virtual void Connect(string ip, int port) {
             this.client.Connect(IPAddress.Parse(ip), port);
         }
 

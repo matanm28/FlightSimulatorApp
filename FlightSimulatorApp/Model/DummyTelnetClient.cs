@@ -13,6 +13,7 @@ namespace FlightSimulatorApp.Model {
         public DummyTelnetClient()
             : base() {
         }
+
         /// <summary>
         /// Reads the data.
         /// </summary>
@@ -31,7 +32,19 @@ namespace FlightSimulatorApp.Model {
                     throw new IOException(e.Message);
                 }
             }
+
             return dataToSend;
+        }
+
+        /// <summary>
+        /// Connects the client.
+        /// </summary>
+        /// <param name="ip">The IP.</param>
+        /// <param name="port">The port.</param>
+        public override void Connect(string ip, int port) {
+            base.Connect(ip, port);
+            NetworkStream ns = this.client.GetStream();
+            ns.ReadTimeout = 1000 * 10;
         }
     }
 }
